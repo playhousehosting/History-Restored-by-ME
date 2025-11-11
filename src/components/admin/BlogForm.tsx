@@ -30,6 +30,9 @@ export function BlogForm({ post, onClose, onSave }: BlogFormProps) {
     content: "",
     featuredImage: "",
     published: false,
+    metaTitle: "",
+    metaDescription: "",
+    tags: "",
   })
 
   const createPost = useMutation(api.blogPosts.create)
@@ -44,6 +47,9 @@ export function BlogForm({ post, onClose, onSave }: BlogFormProps) {
         content: post.content,
         featuredImage: post.featuredImage || "",
         published: post.published,
+        metaTitle: post.metaTitle || "",
+        metaDescription: post.metaDescription || "",
+        tags: post.tags || "",
       })
     }
   }, [post])
@@ -79,6 +85,9 @@ export function BlogForm({ post, onClose, onSave }: BlogFormProps) {
           excerpt: formData.excerpt || undefined,
           featuredImage: formData.featuredImage || undefined,
           published: formData.published,
+          metaTitle: formData.metaTitle || undefined,
+          metaDescription: formData.metaDescription || undefined,
+          tags: formData.tags || undefined,
         })
         toast.success("Post updated successfully!")
       } else {
@@ -89,6 +98,9 @@ export function BlogForm({ post, onClose, onSave }: BlogFormProps) {
           excerpt: formData.excerpt || undefined,
           featuredImage: formData.featuredImage || undefined,
           published: formData.published,
+          metaTitle: formData.metaTitle || undefined,
+          metaDescription: formData.metaDescription || undefined,
+          tags: formData.tags || undefined,
         })
         toast.success("Post created successfully!")
       }
@@ -158,30 +170,119 @@ export function BlogForm({ post, onClose, onSave }: BlogFormProps) {
             />
           </div>
 
-          <div>
-            <Label>Content *</Label>
-            <Tabs defaultValue="editor" className="mt-2">
-              <TabsList>
-                <TabsTrigger value="editor">Editor</TabsTrigger>
-                <TabsTrigger value="preview">
-                  <Eye className="h-4 w-4 mr-2" />
-                  Preview
-                </TabsTrigger>
-              </TabsList>
-              <TabsContent value="editor" className="border rounded-lg p-0 mt-2">
-                <RichTextEditor
-                  content={formData.content}
-                  onChange={(content) => setFormData({ ...formData, content })}
+          <Tabs defaultValue="content" className="space-y-4">
+            <TabsList className="grid w-full grid-cols-3">
+              <TabsTrigger value="content">Content</TabsTrigger>
+              <TabsTrigger value="seo">SEO & Meta</TabsTrigger>
+              <TabsTrigger value="preview">
+                <Eye className="h-4 w-4 mr-2" />
+                Preview
+              </TabsTrigger>
+            </TabsList>
+
+            <TabsContent value="content" className="space-y-4">
+              <div>
+                <Label>Post Content *</Label>
+                <div className="mt-2">
+                  <RichTextEditor
+                    content={formData.content}
+                    onChange={(content) => setFormData({ ...formData, content })}
+                  />
+                </div>
+                <p className="text-sm text-gray-500 mt-2">
+                  Use the rich text editor to format your content. Supports HTML, markdown-style formatting, images, links, and code blocks.
+                </p>
+              </div>
+            </TabsContent>
+
+            <TabsContent value="seo" className="space-y-4">
+              <div>
+                <Label htmlFor="metaTitle">SEO Title (optional)</Label>
+                <Input
+                  id="metaTitle"
+                  value={formData.metaTitle}
+                  onChange={(e) => setFormData({ ...formData, metaTitle: e.target.value })}
+                  placeholder={formData.title || "Override the post title for search engines"}
+                  maxLength={60}
                 />
-              </TabsContent>
-              <TabsContent value="preview" className="border rounded-lg p-6 mt-2">
+                <p className="text-xs text-gray-500 mt-1">
+                  {formData.metaTitle.length}/60 characters. Recommended: 50-60 characters
+                </p>
+              </div>
+
+              <div>
+                <Label htmlFor="metaDescription">Meta Description (optional)</Label>
+                <Textarea
+                  id="metaDescription"
+                  value={formData.metaDescription}
+                  onChange={(e) => setFormData({ ...formData, metaDescription: e.target.value })}
+                  placeholder={formData.excerpt || "Write a compelling description for search engines"}
+                  rows={3}
+                  maxLength={160}
+                />
+                <p className="text-xs text-gray-500 mt-1">
+                  {formData.metaDescription.length}/160 characters. Recommended: 150-160 characters
+                </p>
+              </div>
+
+              <div>
+                <Label htmlFor="tags">Tags (optional)</Label>
+                <Input
+                  id="tags"
+                  value={formData.tags}
+                  onChange={(e) => setFormData({ ...formData, tags: e.target.value })}
+                  placeholder="restoration, farmall, vintage, tractor (comma-separated)"
+                />
+                <p className="text-xs text-gray-500 mt-1">
+                  Add tags to help organize and categorize your content
+                </p>
+              </div>
+
+              <div className="border-t pt-4">
+                <h4 className="font-medium mb-2">SEO Preview</h4>
+                <div className="border rounded-lg p-4 bg-gray-50">
+                  <div className="text-blue-600 text-lg hover:underline cursor-pointer">
+                    {formData.metaTitle || formData.title || "Your post title"}
+                  </div>
+                  <div className="text-green-700 text-sm">
+                    historyrestoredbyme.com › blog › {formData.slug || "post-slug"}
+                  </div>
+                  <div className="text-gray-600 text-sm mt-1">
+                    {formData.metaDescription || formData.excerpt || "Your post description will appear here in search results..."}
+                  </div>
+                </div>
+              </div>
+            </TabsContent>
+
+            <TabsContent value="preview" className="border rounded-lg p-6">
+              <article>
+                {formData.featuredImage && (
+                  <img 
+                    src={formData.featuredImage} 
+                    alt={formData.title}
+                    className="w-full h-64 object-cover rounded-lg mb-6"
+                  />
+                )}
+                <h1 className="text-4xl font-bold mb-2">{formData.title || "Post Title"}</h1>
+                {formData.excerpt && (
+                  <p className="text-xl text-gray-600 mb-6">{formData.excerpt}</p>
+                )}
                 <div
                   className="prose prose-sm sm:prose lg:prose-lg xl:prose-xl max-w-none"
-                  dangerouslySetInnerHTML={{ __html: formData.content }}
+                  dangerouslySetInnerHTML={{ __html: formData.content || "<p>Your content will appear here...</p>" }}
                 />
-              </TabsContent>
-            </Tabs>
-          </div>
+                {formData.tags && (
+                  <div className="mt-6 flex flex-wrap gap-2">
+                    {formData.tags.split(",").map((tag, i) => (
+                      <span key={i} className="px-3 py-1 bg-gray-200 rounded-full text-sm">
+                        {tag.trim()}
+                      </span>
+                    ))}
+                  </div>
+                )}
+              </article>
+            </TabsContent>
+          </Tabs>
 
           <div className="flex items-center space-x-2">
             <Switch

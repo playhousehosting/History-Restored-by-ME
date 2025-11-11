@@ -62,6 +62,9 @@ export const create = mutation({
     excerpt: v.optional(v.string()),
     featuredImage: v.optional(v.string()),
     published: v.boolean(),
+    metaTitle: v.optional(v.string()),
+    metaDescription: v.optional(v.string()),
+    tags: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
     // Get the authenticated user ID
@@ -91,6 +94,9 @@ export const update = mutation({
     excerpt: v.optional(v.string()),
     featuredImage: v.optional(v.string()),
     published: v.boolean(),
+    metaTitle: v.optional(v.string()),
+    metaDescription: v.optional(v.string()),
+    tags: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
     const { id, ...updateData } = args;
