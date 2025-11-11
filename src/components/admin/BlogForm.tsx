@@ -1,6 +1,8 @@
 "use client"
 
 import { useState, useEffect } from "react"
+import { useMutation } from "convex/react"
+import { api } from "@/../convex/_generated/api"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -11,6 +13,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { RichTextEditor } from "./RichTextEditor"
 import { toast } from "sonner"
 import { Loader2, Eye } from "lucide-react"
+import type { Id } from "@/../convex/_generated/dataModel"
 
 interface BlogFormProps {
   post?: any
@@ -28,6 +31,9 @@ export function BlogForm({ post, onClose, onSave }: BlogFormProps) {
     featuredImage: "",
     published: false,
   })
+
+  const createPost = useMutation(api.blogPosts.create)
+  const updatePost = useMutation(api.blogPosts.update)
 
   useEffect(() => {
     if (post) {
@@ -64,22 +70,29 @@ export function BlogForm({ post, onClose, onSave }: BlogFormProps) {
     setLoading(true)
 
     try {
-      const url = post ? `/api/blog/${post.id}` : "/api/blog"
-      const method = post ? "PUT" : "POST"
-
-      const res = await fetch(url, {
-        method,
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
-      })
-
-      if (res.ok) {
-        toast.success(post ? "Post updated successfully!" : "Post created successfully!")
-        onSave()
+      if (post) {
+        await updatePost({
+          id: post._id as Id<"blogPosts">,
+          title: formData.title,
+          slug: formData.slug,
+          content: formData.content,
+          excerpt: formData.excerpt || undefined,
+          featuredImage: formData.featuredImage || undefined,
+          published: formData.published,
+        })
+        toast.success("Post updated successfully!")
       } else {
-        const data = await res.json()
-        toast.error(data.error || "Failed to save post")
+        await createPost({
+          title: formData.title,
+          slug: formData.slug,
+          content: formData.content,
+          excerpt: formData.excerpt || undefined,
+          featuredImage: formData.featuredImage || undefined,
+          published: formData.published,
+        })
+        toast.success("Post created successfully!")
       }
+      onSave()
     } catch (error) {
       toast.error("An error occurred")
     } finally {
