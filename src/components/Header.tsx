@@ -1,11 +1,12 @@
 "use client"
 
 import Link from "next/link"
+import { Suspense } from "react"
 import { useAuthActions } from "@convex-dev/auth/react"
 import { useQuery } from "convex/react"
 import { api } from "@convex/_generated/api"
 
-export default function Header() {
+function HeaderContent() {
   const authActions = useAuthActions()
   // Check if user is authenticated by trying to get their identity
   const viewer = useQuery(api.users.viewer)
@@ -80,6 +81,40 @@ export default function Header() {
                 </Link>
               </>
             )}
+          </div>
+        </div>
+      </nav>
+    </header>
+  )
+}
+
+export default function Header() {
+  return (
+    <Suspense fallback={<LoadingHeader />}>
+      <HeaderContent />
+    </Suspense>
+  )
+}
+
+function LoadingHeader() {
+  return (
+    <header className="bg-red-800 text-white shadow-lg">
+      <nav className="container mx-auto px-4 py-4">
+        <div className="flex justify-between items-center">
+          <Link href="/" className="text-2xl font-bold hover:text-red-200 transition">
+            History Restored by ME
+          </Link>
+          <div className="flex items-center space-x-6">
+            <Link href="/" className="hover:text-red-200 transition">
+              Home
+            </Link>
+            <Link href="/gallery" className="hover:text-red-200 transition">
+              Gallery
+            </Link>
+            <Link href="/blog" className="hover:text-red-200 transition">
+              Blog
+            </Link>
+            <div className="h-10 w-24 bg-red-700 animate-pulse rounded" />
           </div>
         </div>
       </nav>
