@@ -43,8 +43,6 @@ export default function AdminPage() {
     )
   }
 
-  const { signOut } = authActions;
-
   const deleteProject = async (id: Id<"projects">) => {
     if (!confirm("Are you sure you want to delete this project?")) return
 
