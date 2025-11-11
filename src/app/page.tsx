@@ -8,7 +8,7 @@ import { Badge } from "@/components/ui/badge"
 import { Separator } from "@/components/ui/separator"
 import { Wrench, Award, Clock, ArrowRight, Star } from "lucide-react"
 import { useQuery } from "convex/react"
-import { api } from "../../convex/_generated/api"
+import { api } from "@convex/_generated/api"
 
 // Force dynamic rendering to prevent SSG/SSR issues with Convex
 export const dynamic = 'force-dynamic'

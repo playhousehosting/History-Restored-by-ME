@@ -1,11 +1,11 @@
 "use client"
 
 import { useQuery } from "convex/react"
-import { api } from "@/../convex/_generated/api"
+import { api } from "@convex/_generated/api"
 import { notFound } from "next/navigation"
 import { useParams } from "next/navigation"
 import Image from "next/image"
-import type { Id } from "@/../convex/_generated/dataModel"
+import type { Id } from "@convex/_generated/dataModel"
 
 // Force dynamic rendering to prevent SSG/SSR issues with Convex
 export const dynamic = 'force-dynamic'

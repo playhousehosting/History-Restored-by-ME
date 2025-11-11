@@ -13,12 +13,18 @@ export function ConvexClientProvider({ children }: { children: ReactNode }) {
       console.error("Available env vars:", Object.keys(process.env).filter(k => k.startsWith("NEXT_PUBLIC")));
       throw new Error(
         "Missing NEXT_PUBLIC_CONVEX_URL environment variable. " +
-        "Please set it in your Vercel environment variables to: https://usable-blackbird-499.convex.cloud"
+        "Please set it in your Vercel environment variables."
       );
     }
     
     console.log("✅ Convex URL:", url);
-    return new ConvexReactClient(url);
+    
+    try {
+      return new ConvexReactClient(url);
+    } catch (error) {
+      console.error("❌ Failed to initialize Convex client:", error);
+      throw error;
+    }
   }, []);
 
   return (
