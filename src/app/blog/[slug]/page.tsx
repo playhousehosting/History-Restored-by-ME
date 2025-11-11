@@ -1,23 +1,35 @@
-import { prisma } from "@/lib/prisma"
-import { notFound } from "next/navigation"
+"use client"
+
+import { useQuery } from "convex/react"
+import { api } from "@/../convex/_generated/api"
+import { notFound, useParams } from "next/navigation"
 import ReactMarkdown from "react-markdown"
 
-export default async function BlogPostPage({
-  params,
-}: {
-  params: Promise<{ slug: string }>
-}) {
-  const { slug } = await params
+export default function BlogPostPage() {
+  const params = useParams()
+  const slug = params.slug as string
 
-  const post = await prisma.blogPost.findUnique({
-    where: { slug },
-    include: {
-      author: { select: { name: true } },
-      images: { orderBy: { order: "asc" } },
-    },
-  })
+  const post = useQuery(api.blogPosts.getBySlug, { slug })
 
-  if (!post || !post.published) {
+  if (post === undefined) {
+    return (
+      <div className="container mx-auto px-4 py-12">
+        <article className="max-w-3xl mx-auto">
+          <div className="animate-pulse space-y-4">
+            <div className="h-10 bg-gray-200 rounded w-3/4"></div>
+            <div className="h-6 bg-gray-200 rounded w-1/2"></div>
+            <div className="space-y-2 mt-8">
+              <div className="h-4 bg-gray-200 rounded"></div>
+              <div className="h-4 bg-gray-200 rounded"></div>
+              <div className="h-4 bg-gray-200 rounded w-5/6"></div>
+            </div>
+          </div>
+        </article>
+      </div>
+    )
+  }
+
+  if (post === null || !post.published) {
     notFound()
   }
 
@@ -27,14 +39,14 @@ export default async function BlogPostPage({
         <h1 className="text-4xl font-bold mb-4">{post.title}</h1>
         
         <div className="text-gray-600 mb-8 pb-8 border-b">
-          By {post.author.name} • {new Date(post.createdAt).toLocaleDateString()}
+          {new Date(post.createdAt).toLocaleDateString()}
         </div>
 
         <div className="prose prose-lg max-w-none">
           <ReactMarkdown>{post.content}</ReactMarkdown>
         </div>
 
-        {post.updatedAt.getTime() !== post.createdAt.getTime() && (
+        {post.updatedAt !== post.createdAt && (
           <div className="mt-8 text-sm text-gray-500">
             Last updated: {new Date(post.updatedAt).toLocaleDateString()}
           </div>
