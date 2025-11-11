@@ -7,6 +7,9 @@ import { useParams } from "next/navigation"
 import Image from "next/image"
 import type { Id } from "@/../convex/_generated/dataModel"
 
+// Force dynamic rendering to prevent SSG/SSR issues with Convex
+export const dynamic = 'force-dynamic'
+
 export default function ProjectPage() {
   const params = useParams()
   const id = params.id as string

@@ -10,6 +10,9 @@ import { Wrench, Award, Clock, ArrowRight, Star } from "lucide-react"
 import { useQuery } from "convex/react"
 import { api } from "../../convex/_generated/api"
 
+// Force dynamic rendering to prevent SSG/SSR issues with Convex
+export const dynamic = 'force-dynamic'
+
 export default function HomePage() {
   const featuredProjects = useQuery(api.projects.getFeatured) ?? [];
   const recentPosts = useQuery(api.blogPosts.getRecent, { limit: 3 }) ?? [];

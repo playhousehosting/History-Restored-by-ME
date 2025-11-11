@@ -5,6 +5,9 @@ import { api } from "@/../convex/_generated/api"
 import { notFound, useParams } from "next/navigation"
 import ReactMarkdown from "react-markdown"
 
+// Force dynamic rendering to prevent SSG/SSR issues with Convex
+export const dynamic = 'force-dynamic'
+
 export default function BlogPostPage() {
   const params = useParams()
   const slug = params.slug as string
