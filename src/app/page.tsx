@@ -14,8 +14,20 @@ import { api } from "@convex/_generated/api"
 export const dynamic = 'force-dynamic'
 
 export default function HomePage() {
-  const featuredProjects = useQuery(api.projects.getFeatured) ?? [];
-  const recentPosts = useQuery(api.blogPosts.getRecent, { limit: 3 }) ?? [];
+  const featuredProjects = useQuery(api.projects.getFeatured);
+  const recentPosts = useQuery(api.blogPosts.getRecent, { limit: 3 });
+
+  // Handle loading state - show loading UI while data is fetching
+  if (featuredProjects === undefined || recentPosts === undefined) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center space-y-4">
+          <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-red-700 mx-auto"></div>
+          <p className="text-gray-600">Loading...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen">
