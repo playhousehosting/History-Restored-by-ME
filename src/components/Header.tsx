@@ -37,8 +37,6 @@ export default function Header() {
     )
   }
 
-  const { signOut } = authActions;
-
   return (
     <header className="bg-red-800 text-white shadow-lg">
       <nav className="container mx-auto px-4 py-4">
@@ -66,7 +64,7 @@ export default function Header() {
                   </Link>
                 )}
                 <button
-                  onClick={() => void signOut()}
+                  onClick={() => void authActions.signOut()}
                   className="bg-red-700 hover:bg-red-900 px-4 py-2 rounded transition"
                 >
                   Sign Out
