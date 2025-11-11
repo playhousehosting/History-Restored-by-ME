@@ -21,26 +21,22 @@ import type { Id } from "@convex/_generated/dataModel"
 export const dynamic = 'force-dynamic'
 
 export default function AdminPage() {
-  const router = useRouter()
-  let authActions
-  try {
-    authActions = useAuthActions()
-  } catch (e) {
-    authActions = null
-  }
-  
-  const [showProjectForm, setShowProjectForm] = useState(false)
-  const [showBlogForm, setShowBlogForm] = useState(false)
-  const [editingProject, setEditingProject] = useState<any>(null)
-  const [editingBlog, setEditingBlog] = useState<any>(null)
+  // All hooks MUST be called first, unconditionally (React 19 strict rules)
+  // DO NOT DESTRUCTURE - causes SSR issues with React 19
+  const router = useRouter();
+  const authActions = useAuthActions();
+  const [showProjectForm, setShowProjectForm] = useState(false);
+  const [showBlogForm, setShowBlogForm] = useState(false);
+  const [editingProject, setEditingProject] = useState<any>(null);
+  const [editingBlog, setEditingBlog] = useState<any>(null);
 
-  const projects = useQuery(api.projects.getAll)
-  const blogPosts = useQuery(api.blogPosts.getAll)
-  const deleteProjectMutation = useMutation(api.projects.remove)
-  const deleteBlogMutation = useMutation(api.blogPosts.remove)
+  const projects = useQuery(api.projects.getAll);
+  const blogPosts = useQuery(api.blogPosts.getAll);
+  const deleteProjectMutation = useMutation(api.projects.remove);
+  const deleteBlogMutation = useMutation(api.blogPosts.remove);
 
-  // Handle loading state when hooks haven't initialized
-  if (!authActions) {
+  // Handle loading state
+  if (!authActions || !authActions.signOut) {
     return (
       <div className="container mx-auto px-4 py-8">
         <div className="h-8 bg-gray-200 animate-pulse rounded mb-4 w-48"></div>

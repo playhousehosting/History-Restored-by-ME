@@ -14,20 +14,16 @@ import { toast } from "sonner";
 export const dynamic = 'force-dynamic'
 
 export default function SignInPage() {
-  let authActions
-  try {
-    authActions = useAuthActions()
-  } catch (e) {
-    authActions = null
-  }
-  
+  // All hooks MUST be called first, unconditionally (React 19 strict rules)
+  // DO NOT DESTRUCTURE - causes SSR issues with React 19
+  const authActions = useAuthActions();
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
-  // Handle case where auth actions haven't loaded yet
-  if (!authActions) {
+  // Check if signIn is available (should always be true after ConvexAuth loads)
+  if (!authActions || !authActions.signIn) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
         <div className="w-full max-w-md">

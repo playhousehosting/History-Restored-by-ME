@@ -7,18 +7,13 @@ import { useQuery } from "convex/react"
 import { api } from "@convex/_generated/api"
 
 function HeaderContent() {
-  let authActions
-  try {
-    authActions = useAuthActions()
-  } catch (e) {
-    authActions = null
-  }
+  // All hooks MUST be called first, unconditionally (React 19 strict rules)
+  // DO NOT DESTRUCTURE - causes SSR issues with React 19
+  const authActions = useAuthActions();
+  const viewer = useQuery(api.users.viewer);
   
-  // Check if user is authenticated by trying to get their identity
-  const viewer = useQuery(api.users.viewer)
-  
-  // Handle loading state or when hooks haven't initialized yet
-  if (viewer === undefined || !authActions) {
+  // Handle loading state
+  if (viewer === undefined || !authActions || !authActions.signOut) {
     return (
       <header className="bg-red-800 text-white shadow-lg">
         <nav className="container mx-auto px-4 py-4">
