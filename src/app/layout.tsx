@@ -13,6 +13,9 @@ export const metadata: Metadata = {
   description: "Specializes in Farmall but Can Fix Them All!!! Expert restoration of vintage Farmall tractors and all makes and models.",
 }
 
+// Force dynamic rendering because Header uses Convex hooks
+export const dynamic = 'force-dynamic'
+
 export default function RootLayout({
   children,
 }: {
