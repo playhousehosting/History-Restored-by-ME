@@ -11,7 +11,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge"
 import { Skeleton } from "@/components/ui/skeleton"
 import { Alert, AlertDescription } from "@/components/ui/alert"
-import { Plus, Edit, Trash2, Eye, ImageIcon, FileText } from "lucide-react"
+import { Plus, Edit, Trash2, Eye, ImageIcon, FileText, Mail, Users, CheckCircle, Clock, MessageCircle } from "lucide-react"
 import { toast } from "sonner"
 import { ProjectForm } from "@/components/admin/ProjectForm"
 import { BlogForm } from "@/components/admin/BlogForm"
@@ -32,8 +32,13 @@ export default function AdminPage() {
 
   const projects = useQuery(api.projects.getAll);
   const blogPosts = useQuery(api.blogPosts.getAll);
+  const contactSubmissions = useQuery(api.contactSubmissions.getAll);
+  const users = useQuery(api.users.getAll);
   const deleteProjectMutation = useMutation(api.projects.remove);
   const deleteBlogMutation = useMutation(api.blogPosts.remove);
+  const deleteContactMutation = useMutation(api.contactSubmissions.remove);
+  const updateContactStatusMutation = useMutation(api.contactSubmissions.updateStatus);
+  const deleteUserMutation = useMutation(api.users.deleteUser);
 
   // Handle loading state
   if (!authActions || !authActions.signOut) {
@@ -41,6 +46,19 @@ export default function AdminPage() {
       <div className="container mx-auto px-4 py-8">
         <div className="h-8 bg-gray-200 animate-pulse rounded mb-4 w-48"></div>
         <div className="h-64 bg-gray-200 animate-pulse rounded"></div>
+      </div>
+    )
+  }
+
+  if (projects === undefined || blogPosts === undefined || contactSubmissions === undefined) {
+    return (
+      <div className="container mx-auto px-4 py-8">
+        <Skeleton className="h-12 w-64 mb-8" />
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {[...Array(6)].map((_, i) => (
+            <Skeleton key={i} className="h-64" />
+          ))}
+        </div>
       </div>
     )
   }
@@ -67,18 +85,7 @@ export default function AdminPage() {
     }
   }
 
-  if (projects === undefined || blogPosts === undefined) {
-    return (
-      <div className="container mx-auto px-4 py-8">
-        <Skeleton className="h-12 w-64 mb-8" />
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {[...Array(6)].map((_, i) => (
-            <Skeleton key={i} className="h-64" />
-          ))}
-        </div>
-      </div>
-    )
-  }
+
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -87,7 +94,7 @@ export default function AdminPage() {
       </div>
 
       <Tabs defaultValue="projects" className="space-y-6">
-        <TabsList className="grid w-full max-w-md grid-cols-2">
+        <TabsList className="grid w-full max-w-2xl grid-cols-4">
           <TabsTrigger value="projects" className="flex items-center gap-2">
             <ImageIcon className="h-4 w-4" />
             Projects ({projects.length})
@@ -95,6 +102,14 @@ export default function AdminPage() {
           <TabsTrigger value="blog" className="flex items-center gap-2">
             <FileText className="h-4 w-4" />
             Blog ({blogPosts.length})
+          </TabsTrigger>
+          <TabsTrigger value="contacts" className="flex items-center gap-2">
+            <Mail className="h-4 w-4" />
+            Contacts
+          </TabsTrigger>
+          <TabsTrigger value="users" className="flex items-center gap-2">
+            <Users className="h-4 w-4" />
+            Users
           </TabsTrigger>
         </TabsList>
 
@@ -257,6 +272,179 @@ export default function AdminPage() {
                       >
                         <Trash2 className="h-4 w-4 mr-2" />
                         Delete
+                      </Button>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          )}
+        </TabsContent>
+
+        <TabsContent value="contacts" className="space-y-6">
+          <div className="flex justify-between items-center">
+            <h2 className="text-2xl font-bold text-red-700">Contact Form Submissions</h2>
+          </div>
+
+          {!contactSubmissions || contactSubmissions.length === 0 ? (
+            <Alert>
+              <AlertDescription>
+                No contact submissions yet.
+              </AlertDescription>
+            </Alert>
+          ) : (
+            <div className="space-y-4">
+              {contactSubmissions.map((submission: any) => (
+                <Card key={submission._id} className={submission.status === "new" ? "border-red-200 bg-red-50" : ""}>
+                  <CardHeader>
+                    <div className="flex justify-between items-start">
+                      <div className="flex-1">
+                        <CardTitle className="flex items-center gap-2">
+                          {submission.subject}
+                          {submission.status === "new" && (
+                            <Badge className="bg-red-600">New</Badge>
+                          )}
+                          {submission.status === "read" && (
+                            <Badge variant="outline">Read</Badge>
+                          )}
+                          {submission.status === "responded" && (
+                            <Badge className="bg-green-600">Responded</Badge>
+                          )}
+                        </CardTitle>
+                        <CardDescription className="mt-2">
+                          <div className="space-y-1">
+                            <p><strong>From:</strong> {submission.name}</p>
+                            <p><strong>Email:</strong> <a href={`mailto:${submission.email}`} className="text-red-700 hover:underline">{submission.email}</a></p>
+                            {submission.phone && <p><strong>Phone:</strong> <a href={`tel:${submission.phone}`} className="text-red-700 hover:underline">{submission.phone}</a></p>}
+                            <p><strong>Date:</strong> {new Date(submission.createdAt).toLocaleString()}</p>
+                          </div>
+                        </CardDescription>
+                      </div>
+                    </div>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="mb-4 p-4 bg-gray-50 rounded-lg border">
+                      <p className="text-sm whitespace-pre-wrap">{submission.message}</p>
+                    </div>
+                    <div className="flex gap-2">
+                      {submission.status === "new" && (
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={async () => {
+                            try {
+                              await updateContactStatusMutation({ id: submission._id, status: "read" })
+                              toast.success("Marked as read")
+                            } catch (error) {
+                              toast.error("Failed to update status")
+                            }
+                          }}
+                        >
+                          <CheckCircle className="h-4 w-4 mr-2" />
+                          Mark as Read
+                        </Button>
+                      )}
+                      {submission.status !== "responded" && (
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={async () => {
+                            try {
+                              await updateContactStatusMutation({ id: submission._id, status: "responded" })
+                              toast.success("Marked as responded")
+                            } catch (error) {
+                              toast.error("Failed to update status")
+                            }
+                          }}
+                        >
+                          <MessageCircle className="h-4 w-4 mr-2" />
+                          Mark as Responded
+                        </Button>
+                      )}
+                      <Button
+                        size="sm"
+                        variant="destructive"
+                        onClick={async () => {
+                          if (!confirm("Are you sure you want to delete this submission?")) return
+                          try {
+                            await deleteContactMutation({ id: submission._id })
+                            toast.success("Submission deleted")
+                          } catch (error) {
+                            toast.error("Failed to delete submission")
+                          }
+                        }}
+                      >
+                        <Trash2 className="h-4 w-4 mr-2" />
+                        Delete
+                      </Button>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          )}
+        </TabsContent>
+
+        <TabsContent value="users" className="space-y-6">
+          <div className="flex justify-between items-center">
+            <h2 className="text-2xl font-bold text-red-700">User Management</h2>
+            <Button
+              onClick={() => router.push("/auth/register")}
+              className="bg-red-700 hover:bg-red-800"
+            >
+              <Plus className="h-4 w-4 mr-2" />
+              Add New User
+            </Button>
+          </div>
+
+          {!users || users.length === 0 ? (
+            <Alert>
+              <AlertDescription>
+                No users found. Create your first user via the /auth/register page.
+              </AlertDescription>
+            </Alert>
+          ) : (
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {users.map((user: any) => (
+                <Card key={user._id}>
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <Users className="h-5 w-5" />
+                      {user.name || "Unnamed User"}
+                    </CardTitle>
+                    <CardDescription>
+                      {user.email}
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-2 text-sm">
+                      <p className="text-gray-600">
+                        <strong>Joined:</strong> {new Date(user._creationTime).toLocaleDateString()}
+                      </p>
+                      {user.emailVerificationTime && (
+                        <p className="text-green-600 flex items-center gap-1">
+                          <CheckCircle className="h-4 w-4" />
+                          Email Verified
+                        </p>
+                      )}
+                    </div>
+                    <div className="mt-4">
+                      <Button
+                        size="sm"
+                        variant="destructive"
+                        className="w-full"
+                        onClick={async () => {
+                          if (!confirm(`Are you sure you want to delete user ${user.name || user.email}?`)) return
+                          try {
+                            await deleteUserMutation({ id: user._id })
+                            toast.success("User deleted successfully")
+                          } catch (error) {
+                            toast.error("Failed to delete user")
+                          }
+                        }}
+                      >
+                        <Trash2 className="h-4 w-4 mr-2" />
+                        Delete User
                       </Button>
                     </div>
                   </CardContent>

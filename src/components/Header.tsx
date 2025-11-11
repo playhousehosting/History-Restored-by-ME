@@ -57,14 +57,15 @@ function HeaderContent() {
             <Link href="/blog" className="hover:text-red-200 transition">
               Blog
             </Link>
+            <Link href="/contact" className="hover:text-red-200 transition">
+              Contact
+            </Link>
             
             {viewer ? (
               <>
-                {viewer.role === "admin" && (
-                  <Link href="/admin" className="hover:text-red-200 transition">
-                    Admin
-                  </Link>
-                )}
+                <Link href="/admin" className="hover:text-red-200 transition">
+                  Admin
+                </Link>
                 <button
                   onClick={() => void authActions.signOut()}
                   className="bg-red-700 hover:bg-red-900 px-4 py-2 rounded transition"
@@ -114,6 +115,9 @@ function LoadingHeader() {
             </Link>
             <Link href="/blog" className="hover:text-red-200 transition">
               Blog
+            </Link>
+            <Link href="/contact" className="hover:text-red-200 transition">
+              Contact
             </Link>
             <div className="h-10 w-24 bg-red-700 animate-pulse rounded" />
           </div>

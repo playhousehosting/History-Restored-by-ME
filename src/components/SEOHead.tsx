@@ -67,6 +67,7 @@ export function generateSEOMetadata({
   if (type === "article" && (publishedTime || modifiedTime)) {
     metadata.openGraph = {
       ...metadata.openGraph,
+      type: "article",
       publishedTime,
       modifiedTime,
       authors: [siteName],

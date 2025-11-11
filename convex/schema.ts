@@ -51,4 +51,20 @@ export default defineSchema({
     .index("by_slug", ["slug"])
     .index("by_published", ["published"])
     .index("by_user", ["userId"]),
+
+  contactSubmissions: defineTable({
+    name: v.string(),
+    email: v.string(),
+    phone: v.optional(v.string()),
+    subject: v.string(),
+    message: v.string(),
+    status: v.union(
+      v.literal("new"),
+      v.literal("read"),
+      v.literal("responded")
+    ),
+    createdAt: v.number(),
+  })
+    .index("by_status", ["status"])
+    .index("by_created", ["createdAt"]),
 });
