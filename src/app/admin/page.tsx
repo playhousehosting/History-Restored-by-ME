@@ -22,7 +22,13 @@ export const dynamic = 'force-dynamic'
 
 export default function AdminPage() {
   const router = useRouter()
-  const authActions = useAuthActions()
+  let authActions
+  try {
+    authActions = useAuthActions()
+  } catch (e) {
+    authActions = null
+  }
+  
   const [showProjectForm, setShowProjectForm] = useState(false)
   const [showBlogForm, setShowBlogForm] = useState(false)
   const [editingProject, setEditingProject] = useState<any>(null)

@@ -14,7 +14,13 @@ import { toast } from "sonner";
 export const dynamic = 'force-dynamic'
 
 export default function RegisterPage() {
-  const authActions = useAuthActions();
+  let authActions
+  try {
+    authActions = useAuthActions();
+  } catch (e) {
+    authActions = null
+  }
+  
   const router = useRouter();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -43,6 +49,8 @@ export default function RegisterPage() {
     )
   }
 
+  const { signIn } = authActions;
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
@@ -59,7 +67,7 @@ export default function RegisterPage() {
     setIsLoading(true);
 
     try {
-      await authActions.signIn("password", { 
+      await signIn("password", { 
         email, 
         password, 
         name,
