@@ -7,7 +7,13 @@ import { useQuery } from "convex/react"
 import { api } from "@convex/_generated/api"
 
 function HeaderContent() {
-  const authActions = useAuthActions()
+  let authActions
+  try {
+    authActions = useAuthActions()
+  } catch (e) {
+    authActions = null
+  }
+  
   // Check if user is authenticated by trying to get their identity
   const viewer = useQuery(api.users.viewer)
   

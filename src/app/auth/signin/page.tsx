@@ -14,7 +14,13 @@ import { toast } from "sonner";
 export const dynamic = 'force-dynamic'
 
 export default function SignInPage() {
-  const authActions = useAuthActions();
+  let authActions
+  try {
+    authActions = useAuthActions()
+  } catch (e) {
+    authActions = null
+  }
+  
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -39,12 +45,14 @@ export default function SignInPage() {
     )
   }
 
+  const { signIn } = authActions;
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
 
     try {
-      await authActions.signIn("password", { email, password, flow: "signIn" });
+      await signIn("password", { email, password, flow: "signIn" });
       toast.success("Signed in successfully!");
       router.push("/admin");
     } catch (error) {
