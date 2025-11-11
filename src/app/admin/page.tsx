@@ -1,8 +1,10 @@
 "use client"
 
-import { useState, useEffect } from "react"
-import { useSession } from "next-auth/react"
+import { useState } from "react"
 import { useRouter } from "next/navigation"
+import { useQuery, useMutation } from "convex/react"
+import { api } from "@/../convex/_generated/api"
+import { useAuthActions } from "@convex-dev/auth/react"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
@@ -13,78 +15,44 @@ import { Plus, Edit, Trash2, Eye, ImageIcon, FileText } from "lucide-react"
 import { toast } from "sonner"
 import { ProjectForm } from "@/components/admin/ProjectForm"
 import { BlogForm } from "@/components/admin/BlogForm"
+import type { Id } from "@/../convex/_generated/dataModel"
 
 export default function AdminPage() {
-  const { data: session, status } = useSession()
   const router = useRouter()
-  const [projects, setProjects] = useState<any[]>([])
-  const [blogPosts, setBlogPosts] = useState<any[]>([])
-  const [loading, setLoading] = useState(true)
+  const { signOut } = useAuthActions()
   const [showProjectForm, setShowProjectForm] = useState(false)
   const [showBlogForm, setShowBlogForm] = useState(false)
   const [editingProject, setEditingProject] = useState<any>(null)
   const [editingBlog, setEditingBlog] = useState<any>(null)
 
-  useEffect(() => {
-    if (status === "unauthenticated") {
-      router.push("/auth/signin")
-    } else if (session?.user?.role !== "admin") {
-      router.push("/")
-    } else {
-      fetchData()
-    }
-  }, [status, session, router])
+  const projects = useQuery(api.projects.getAll)
+  const blogPosts = useQuery(api.blogPosts.getAll)
+  const deleteProjectMutation = useMutation(api.projects.remove)
+  const deleteBlogMutation = useMutation(api.blogPosts.remove)
 
-  const fetchData = async () => {
-    try {
-      const [projectsRes, blogRes] = await Promise.all([
-        fetch("/api/projects"),
-        fetch("/api/blog"),
-      ])
-      const projectsData = await projectsRes.json()
-      const blogData = await blogRes.json()
-      setProjects(projectsData)
-      setBlogPosts(blogData)
-    } catch (error) {
-      toast.error("Failed to load data")
-    } finally {
-      setLoading(false)
-    }
-  }
-
-  const deleteProject = async (id: string) => {
+  const deleteProject = async (id: Id<"projects">) => {
     if (!confirm("Are you sure you want to delete this project?")) return
 
     try {
-      const res = await fetch(`/api/projects/${id}`, { method: "DELETE" })
-      if (res.ok) {
-        toast.success("Project deleted successfully")
-        fetchData()
-      } else {
-        toast.error("Failed to delete project")
-      }
+      await deleteProjectMutation({ id })
+      toast.success("Project deleted successfully")
     } catch (error) {
       toast.error("Failed to delete project")
     }
   }
 
-  const deleteBlogPost = async (id: string) => {
+  const deleteBlogPost = async (id: Id<"blogPosts">) => {
     if (!confirm("Are you sure you want to delete this blog post?")) return
 
     try {
-      const res = await fetch(`/api/blog/${id}`, { method: "DELETE" })
-      if (res.ok) {
-        toast.success("Blog post deleted successfully")
-        fetchData()
-      } else {
-        toast.error("Failed to delete blog post")
-      }
+      await deleteBlogMutation({ id })
+      toast.success("Blog post deleted successfully")
     } catch (error) {
       toast.error("Failed to delete blog post")
     }
   }
 
-  if (status === "loading" || loading) {
+  if (projects === undefined || blogPosts === undefined) {
     return (
       <div className="container mx-auto px-4 py-8">
         <Skeleton className="h-12 w-64 mb-8" />
@@ -95,10 +63,6 @@ export default function AdminPage() {
         </div>
       </div>
     )
-  }
-
-  if (!session?.user || session.user.role !== "admin") {
-    return null
   }
 
   return (
@@ -143,7 +107,7 @@ export default function AdminPage() {
           ) : (
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
               {projects.map((project) => (
-                <Card key={project.id} className="overflow-hidden">
+                <Card key={project._id} className="overflow-hidden">
                   <div className="relative h-48 bg-gray-200">
                     {project.images?.[0] ? (
                       <img
@@ -179,7 +143,7 @@ export default function AdminPage() {
                       <Button
                         size="sm"
                         variant="outline"
-                        onClick={() => router.push(`/gallery/${project.id}`)}
+                        onClick={() => router.push(`/gallery/${project._id}`)}
                       >
                         <Eye className="h-4 w-4" />
                       </Button>
@@ -196,7 +160,7 @@ export default function AdminPage() {
                       <Button
                         size="sm"
                         variant="destructive"
-                        onClick={() => deleteProject(project.id)}
+                        onClick={() => deleteProject(project._id)}
                       >
                         <Trash2 className="h-4 w-4" />
                       </Button>
@@ -232,7 +196,7 @@ export default function AdminPage() {
           ) : (
             <div className="space-y-4">
               {blogPosts.map((post) => (
-                <Card key={post.id}>
+                <Card key={post._id}>
                   <CardHeader>
                     <div className="flex justify-between items-start">
                       <div className="flex-1">
@@ -274,7 +238,7 @@ export default function AdminPage() {
                       <Button
                         size="sm"
                         variant="destructive"
-                        onClick={() => deleteBlogPost(post.id)}
+                        onClick={() => deleteBlogPost(post._id)}
                       >
                         <Trash2 className="h-4 w-4 mr-2" />
                         Delete
@@ -296,7 +260,6 @@ export default function AdminPage() {
             setEditingProject(null)
           }}
           onSave={() => {
-            fetchData()
             setShowProjectForm(false)
             setEditingProject(null)
           }}
@@ -311,7 +274,6 @@ export default function AdminPage() {
             setEditingBlog(null)
           }}
           onSave={() => {
-            fetchData()
             setShowBlogForm(false)
             setEditingBlog(null)
           }}

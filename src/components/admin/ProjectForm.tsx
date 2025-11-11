@@ -1,6 +1,8 @@
 "use client"
 
 import { useState, useEffect } from "react"
+import { useMutation } from "convex/react"
+import { api } from "@/../convex/_generated/api"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -11,6 +13,7 @@ import { Switch } from "@/components/ui/switch"
 import { ImageUploader, ImagePreview } from "./ImageUploader"
 import { toast } from "sonner"
 import { Loader2 } from "lucide-react"
+import type { Id } from "@/../convex/_generated/dataModel"
 
 interface ProjectFormProps {
   project?: any
@@ -23,10 +26,13 @@ export function ProjectForm({ project, onClose, onSave }: ProjectFormProps) {
   const [formData, setFormData] = useState({
     title: "",
     description: "",
-    status: "completed",
+    status: "completed" as "completed" | "in-progress" | "planned",
     featured: false,
     images: [] as { url: string; alt?: string }[],
   })
+
+  const createProject = useMutation(api.projects.create)
+  const updateProject = useMutation(api.projects.update)
 
   useEffect(() => {
     if (project) {
@@ -45,21 +51,27 @@ export function ProjectForm({ project, onClose, onSave }: ProjectFormProps) {
     setLoading(true)
 
     try {
-      const url = project ? `/api/projects/${project.id}` : "/api/projects"
-      const method = project ? "PUT" : "POST"
-
-      const res = await fetch(url, {
-        method,
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
-      })
-
-      if (res.ok) {
-        toast.success(project ? "Project updated successfully!" : "Project created successfully!")
-        onSave()
+      if (project) {
+        await updateProject({
+          id: project._id as Id<"projects">,
+          title: formData.title,
+          description: formData.description,
+          status: formData.status,
+          featured: formData.featured,
+          images: formData.images,
+        })
+        toast.success("Project updated successfully!")
       } else {
-        toast.error("Failed to save project")
+        await createProject({
+          title: formData.title,
+          description: formData.description,
+          status: formData.status,
+          featured: formData.featured,
+          images: formData.images,
+        })
+        toast.success("Project created successfully!")
       }
+      onSave()
     } catch (error) {
       toast.error("An error occurred")
     } finally {
