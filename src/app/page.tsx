@@ -1,4 +1,5 @@
-import { prisma } from "@/lib/prisma"
+"use client";
+
 import Link from "next/link"
 import Image from "next/image"
 import { Button } from "@/components/ui/button"
@@ -6,39 +7,12 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge"
 import { Separator } from "@/components/ui/separator"
 import { Wrench, Award, Clock, ArrowRight, Star } from "lucide-react"
+import { useQuery } from "convex/react"
+import { api } from "../../convex/_generated/api"
 
-export const metadata = {
-  title: "History Restored by ME - Expert Farmall Tractor Restoration",
-  description:
-    "Specializes in Farmall but Can Fix Them All!!! Professional vintage tractor restoration services. Bringing classic Farmall tractors back to their former glory.",
-  openGraph: {
-    title: "History Restored by ME - Expert Farmall Tractor Restoration",
-    description:
-      "Specializes in Farmall but Can Fix Them All!!! Professional vintage tractor restoration services.",
-    type: "website",
-  },
-}
-
-export default async function HomePage() {
-  let featuredProjects: any[] = []
-  let recentPosts: any[] = []
-
-  try {
-    featuredProjects = await prisma.project.findMany({
-      where: { featured: true },
-      include: { images: { orderBy: { order: "asc" }, take: 1 } },
-      take: 6,
-      orderBy: { createdAt: "desc" },
-    })
-
-    recentPosts = await prisma.blogPost.findMany({
-      where: { published: true },
-      take: 3,
-      orderBy: { createdAt: "desc" },
-    })
-  } catch (error) {
-    console.log("Database not connected. Running in demo mode.")
-  }
+export default function HomePage() {
+  const featuredProjects = useQuery(api.projects.getFeatured) ?? [];
+  const recentPosts = useQuery(api.blogPosts.getRecent, { limit: 3 }) ?? [];
 
   return (
     <div className="min-h-screen">
