@@ -1,15 +1,8 @@
-import { convexAuth } from "@convex-dev/auth/server";
-import { Password } from "@convex-dev/auth/providers/Password";
-
-export const { auth, signIn, signOut, store } = convexAuth({
+export default {
   providers: [
-    Password({
-      profile(params) {
-        return {
-          email: params.email as string,
-          name: params.name as string,
-        };
-      },
-    }),
+    {
+      domain: process.env.CONVEX_SITE_URL,
+      applicationID: "convex",
+    },
   ],
-});
+};
