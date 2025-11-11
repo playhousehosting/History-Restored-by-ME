@@ -1,17 +1,27 @@
-import { prisma } from "@/lib/prisma"
+"use client"
+
+import { useQuery } from "convex/react"
+import { api } from "@/../convex/_generated/api"
 import Link from "next/link"
 
-export default async function BlogPage() {
-  let posts = []
+export default function BlogPage() {
+  const posts = useQuery(api.blogPosts.getPublished)
 
-  try {
-    posts = await prisma.blogPost.findMany({
-      where: { published: true },
-      include: { author: { select: { name: true } } },
-      orderBy: { createdAt: "desc" },
-    })
-  } catch (error) {
-    console.log("Database not connected.")
+  if (posts === undefined) {
+    return (
+      <div className="container mx-auto px-4 py-12">
+        <h1 className="text-4xl font-bold mb-8 text-center">Blog</h1>
+        <div className="max-w-4xl mx-auto space-y-8">
+          {[...Array(3)].map((_, i) => (
+            <div key={i} className="bg-white rounded-lg shadow-md p-8">
+              <div className="h-8 bg-gray-200 rounded animate-pulse mb-4 w-3/4"></div>
+              <div className="h-4 bg-gray-200 rounded animate-pulse mb-2"></div>
+              <div className="h-4 bg-gray-200 rounded animate-pulse w-2/3"></div>
+            </div>
+          ))}
+        </div>
+      </div>
+    )
   }
 
   return (
@@ -24,13 +34,13 @@ export default async function BlogPage() {
       {posts.length === 0 ? (
         <div className="text-center py-12">
           <p className="text-gray-600 text-lg mb-4">No blog posts yet.</p>
-          <p className="text-gray-500">Set up your database and start sharing restoration stories!</p>
+          <p className="text-gray-500">Start sharing restoration stories!</p>
         </div>
       ) : (
         <div className="max-w-4xl mx-auto space-y-8">
-          {posts.map((post: any) => (
+          {posts.map((post) => (
             <article
-              key={post.id}
+              key={post._id}
               className="bg-white rounded-lg shadow-md p-8 hover:shadow-xl transition"
             >
               <Link href={`/blog/${post.slug}`}>
@@ -43,7 +53,7 @@ export default async function BlogPage() {
               )}
               <div className="flex items-center justify-between text-sm text-gray-500">
                 <span>
-                  By {post.author.name} • {new Date(post.createdAt).toLocaleDateString()}
+                  {new Date(post.createdAt).toLocaleDateString()}
                 </span>
                 <Link
                   href={`/blog/${post.slug}`}
