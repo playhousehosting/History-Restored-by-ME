@@ -18,6 +18,7 @@ export function ConvexClientProvider({ children }: { children: ReactNode }) {
     }
     
     console.log("✅ Convex URL:", url);
+    console.log("🔄 ConvexClientProvider initialized successfully");
     
     try {
       return new ConvexReactClient(url);
