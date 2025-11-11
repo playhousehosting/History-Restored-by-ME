@@ -6,12 +6,12 @@ import { useQuery } from "convex/react"
 import { api } from "@convex/_generated/api"
 
 export default function Header() {
-  const { signOut } = useAuthActions()
+  const authActions = useAuthActions()
   // Check if user is authenticated by trying to get their identity
   const viewer = useQuery(api.users.viewer)
   
-  // Handle loading state
-  if (viewer === undefined) {
+  // Handle loading state or when hooks haven't initialized yet
+  if (viewer === undefined || !authActions) {
     return (
       <header className="bg-red-800 text-white shadow-lg">
         <nav className="container mx-auto px-4 py-4">
@@ -36,6 +36,8 @@ export default function Header() {
       </header>
     )
   }
+
+  const { signOut } = authActions;
 
   return (
     <header className="bg-red-800 text-white shadow-lg">
