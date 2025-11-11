@@ -22,7 +22,7 @@ export const dynamic = 'force-dynamic'
 
 export default function AdminPage() {
   const router = useRouter()
-  const { signOut } = useAuthActions()
+  const authActions = useAuthActions()
   const [showProjectForm, setShowProjectForm] = useState(false)
   const [showBlogForm, setShowBlogForm] = useState(false)
   const [editingProject, setEditingProject] = useState<any>(null)
@@ -32,6 +32,18 @@ export default function AdminPage() {
   const blogPosts = useQuery(api.blogPosts.getAll)
   const deleteProjectMutation = useMutation(api.projects.remove)
   const deleteBlogMutation = useMutation(api.blogPosts.remove)
+
+  // Handle loading state when hooks haven't initialized
+  if (!authActions) {
+    return (
+      <div className="container mx-auto px-4 py-8">
+        <div className="h-8 bg-gray-200 animate-pulse rounded mb-4 w-48"></div>
+        <div className="h-64 bg-gray-200 animate-pulse rounded"></div>
+      </div>
+    )
+  }
+
+  const { signOut } = authActions;
 
   const deleteProject = async (id: Id<"projects">) => {
     if (!confirm("Are you sure you want to delete this project?")) return

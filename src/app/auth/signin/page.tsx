@@ -14,11 +14,32 @@ import { toast } from "sonner";
 export const dynamic = 'force-dynamic'
 
 export default function SignInPage() {
-  const { signIn } = useAuthActions();
+  const authActions = useAuthActions();
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+
+  // Handle case where auth actions haven't loaded yet
+  if (!authActions) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
+        <div className="w-full max-w-md">
+          <div className="h-96 bg-white rounded-lg shadow animate-pulse p-8">
+            <div className="h-8 bg-gray-200 rounded mb-4 w-3/4"></div>
+            <div className="h-4 bg-gray-200 rounded mb-8 w-full"></div>
+            <div className="space-y-4">
+              <div className="h-10 bg-gray-200 rounded"></div>
+              <div className="h-10 bg-gray-200 rounded"></div>
+              <div className="h-10 bg-gray-200 rounded"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  const { signIn } = authActions;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
