@@ -3,7 +3,7 @@
 import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { useQuery, useMutation } from "convex/react"
-import { api } from "@/../convex/_generated/api"
+import { api } from "@convex/_generated/api"
 import { useAuthActions } from "@convex-dev/auth/react"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Button } from "@/components/ui/button"
@@ -15,7 +15,7 @@ import { Plus, Edit, Trash2, Eye, ImageIcon, FileText } from "lucide-react"
 import { toast } from "sonner"
 import { ProjectForm } from "@/components/admin/ProjectForm"
 import { BlogForm } from "@/components/admin/BlogForm"
-import type { Id } from "@/../convex/_generated/dataModel"
+import type { Id } from "@convex/_generated/dataModel"
 
 // Force dynamic rendering to prevent SSG/SSR issues with Convex
 export const dynamic = 'force-dynamic'

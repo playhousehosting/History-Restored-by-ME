@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { useMutation } from "convex/react"
-import { api } from "@/../convex/_generated/api"
+import { api } from "@convex/_generated/api"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -13,7 +13,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { RichTextEditor } from "./RichTextEditor"
 import { toast } from "sonner"
 import { Loader2, Eye } from "lucide-react"
-import type { Id } from "@/../convex/_generated/dataModel"
+import type { Id } from "@convex/_generated/dataModel"
 
 interface BlogFormProps {
   post?: any

@@ -3,7 +3,7 @@
 import Link from "next/link"
 import { useAuthActions } from "@convex-dev/auth/react"
 import { useQuery } from "convex/react"
-import { api } from "@/../convex/_generated/api"
+import { api } from "@convex/_generated/api"
 
 export default function Header() {
   const { signOut } = useAuthActions()
@@ -13,15 +13,26 @@ export default function Header() {
   // Handle loading state
   if (viewer === undefined) {
     return (
-      <header className="bg-white shadow-md">
-        <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-          <Link href="/" className="text-2xl font-bold text-green-600">
-            History Restored By Me
-          </Link>
-          <nav>
-            <div className="h-10 w-24 bg-gray-200 animate-pulse rounded" />
-          </nav>
-        </div>
+      <header className="bg-red-800 text-white shadow-lg">
+        <nav className="container mx-auto px-4 py-4">
+          <div className="flex justify-between items-center">
+            <Link href="/" className="text-2xl font-bold hover:text-red-200 transition">
+              History Restored by ME
+            </Link>
+            <div className="flex items-center space-x-6">
+              <Link href="/" className="hover:text-red-200 transition">
+                Home
+              </Link>
+              <Link href="/gallery" className="hover:text-red-200 transition">
+                Gallery
+              </Link>
+              <Link href="/blog" className="hover:text-red-200 transition">
+                Blog
+              </Link>
+              <div className="h-10 w-24 bg-red-700 animate-pulse rounded" />
+            </div>
+          </div>
+        </nav>
       </header>
     )
   }

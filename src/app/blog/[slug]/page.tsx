@@ -1,7 +1,7 @@
 "use client"
 
 import { useQuery } from "convex/react"
-import { api } from "@/../convex/_generated/api"
+import { api } from "@convex/_generated/api"
 import { notFound, useParams } from "next/navigation"
 import ReactMarkdown from "react-markdown"
 
