@@ -1,4 +1,4 @@
-# History Restored by ME - Modern Admin Portal & Luxury UI
+# History Restored by ME - Modern Admin Portal & Luxury UI.
 
 ## 🎨 What's New
 
