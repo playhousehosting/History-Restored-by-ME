@@ -30,6 +30,8 @@ export function BlogForm({ post, onClose, onSave }: BlogFormProps) {
     content: "",
     featuredImage: "",
     published: false,
+    status: "draft" as "draft" | "scheduled" | "published",
+    scheduledPublishDate: "",
     metaTitle: "",
     metaDescription: "",
     tags: "",
@@ -47,6 +49,10 @@ export function BlogForm({ post, onClose, onSave }: BlogFormProps) {
         content: post.content,
         featuredImage: post.featuredImage || "",
         published: post.published,
+        status: post.status || "draft",
+        scheduledPublishDate: post.scheduledPublishDate 
+          ? new Date(post.scheduledPublishDate).toISOString().slice(0, 16)
+          : "",
         metaTitle: post.metaTitle || "",
         metaDescription: post.metaDescription || "",
         tags: post.tags || "",
@@ -76,6 +82,10 @@ export function BlogForm({ post, onClose, onSave }: BlogFormProps) {
     setLoading(true)
 
     try {
+      const scheduledDate = formData.scheduledPublishDate 
+        ? new Date(formData.scheduledPublishDate).getTime()
+        : undefined;
+
       if (post) {
         await updatePost({
           id: post._id as Id<"blogPosts">,
@@ -85,6 +95,8 @@ export function BlogForm({ post, onClose, onSave }: BlogFormProps) {
           excerpt: formData.excerpt || undefined,
           featuredImage: formData.featuredImage || undefined,
           published: formData.published,
+          status: formData.status,
+          scheduledPublishDate: scheduledDate,
           metaTitle: formData.metaTitle || undefined,
           metaDescription: formData.metaDescription || undefined,
           tags: formData.tags || undefined,
@@ -98,6 +110,8 @@ export function BlogForm({ post, onClose, onSave }: BlogFormProps) {
           excerpt: formData.excerpt || undefined,
           featuredImage: formData.featuredImage || undefined,
           published: formData.published,
+          status: formData.status,
+          scheduledPublishDate: scheduledDate,
           metaTitle: formData.metaTitle || undefined,
           metaDescription: formData.metaDescription || undefined,
           tags: formData.tags || undefined,
@@ -284,15 +298,57 @@ export function BlogForm({ post, onClose, onSave }: BlogFormProps) {
             </TabsContent>
           </Tabs>
 
-          <div className="flex items-center space-x-2">
-            <Switch
-              id="published"
-              checked={formData.published}
-              onCheckedChange={(checked) => setFormData({ ...formData, published: checked })}
-            />
-            <Label htmlFor="published">
-              Publish immediately (uncheck to save as draft)
-            </Label>
+          <div className="border rounded-lg p-4 space-y-4">
+            <h3 className="font-semibold text-lg">Publishing Settings</h3>
+            
+            <div>
+              <Label htmlFor="status">Post Status</Label>
+              <select
+                id="status"
+                value={formData.status}
+                onChange={(e) => setFormData({ ...formData, status: e.target.value as any })}
+                className="w-full mt-1.5 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500"
+              >
+                <option value="draft">Draft - Save for later editing</option>
+                <option value="scheduled">Scheduled - Publish at specific date/time</option>
+                <option value="published">Published - Make live immediately</option>
+              </select>
+            </div>
+
+            {formData.status === "scheduled" && (
+              <div>
+                <Label htmlFor="scheduledPublishDate">Schedule Publish Date & Time</Label>
+                <Input
+                  id="scheduledPublishDate"
+                  type="datetime-local"
+                  value={formData.scheduledPublishDate}
+                  onChange={(e) => setFormData({ ...formData, scheduledPublishDate: e.target.value })}
+                  min={new Date().toISOString().slice(0, 16)}
+                  className="mt-1.5"
+                  required={formData.status === "scheduled"}
+                />
+                <p className="text-xs text-gray-500 mt-1">
+                  Post will be automatically published at this date and time
+                </p>
+              </div>
+            )}
+
+            <div className="flex items-center space-x-2">
+              <Switch
+                id="published"
+                checked={formData.published}
+                onCheckedChange={(checked) => {
+                  setFormData({ 
+                    ...formData, 
+                    published: checked,
+                    status: checked ? "published" : "draft"
+                  })
+                }}
+              />
+              <Label htmlFor="published">
+                Publish immediately (overrides status above)
+              </Label>
+            </div>
           </div>
 
           <div className="flex justify-end gap-2 pt-4 border-t">

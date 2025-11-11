@@ -11,10 +11,11 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge"
 import { Skeleton } from "@/components/ui/skeleton"
 import { Alert, AlertDescription } from "@/components/ui/alert"
-import { Plus, Edit, Trash2, Eye, ImageIcon, FileText, Mail, Users, CheckCircle, Clock, MessageCircle } from "lucide-react"
+import { Plus, Edit, Trash2, Eye, ImageIcon, FileText, Mail, Users, CheckCircle, Clock, MessageCircle, Sparkles, FileEdit, Calendar, Send } from "lucide-react"
 import { toast } from "sonner"
 import { ProjectForm } from "@/components/admin/ProjectForm"
 import { BlogForm } from "@/components/admin/BlogForm"
+import { AIBlogGenerator } from "@/components/admin/AIBlogGenerator"
 import type { Id } from "@convex/_generated/dataModel"
 
 // Force dynamic rendering to prevent SSG/SSR issues with Convex
@@ -32,6 +33,8 @@ export default function AdminPage() {
 
   const projects = useQuery(api.projects.getAll);
   const blogPosts = useQuery(api.blogPosts.getAll);
+  const draftPosts = useQuery(api.blogPosts.getDrafts);
+  const aiDrafts = useQuery(api.blogPosts.getAIDrafts);
   const contactSubmissions = useQuery(api.contactSubmissions.getAll);
   const users = useQuery(api.users.getAll);
   const deleteProjectMutation = useMutation(api.projects.remove);
@@ -39,6 +42,7 @@ export default function AdminPage() {
   const deleteContactMutation = useMutation(api.contactSubmissions.remove);
   const updateContactStatusMutation = useMutation(api.contactSubmissions.updateStatus);
   const deleteUserMutation = useMutation(api.users.deleteUser);
+  const updateBlogMutation = useMutation(api.blogPosts.update);
 
   // Handle loading state
   if (!authActions || !authActions.signOut) {
@@ -94,14 +98,22 @@ export default function AdminPage() {
       </div>
 
       <Tabs defaultValue="projects" className="space-y-6">
-        <TabsList className="grid w-full max-w-2xl grid-cols-4">
+        <TabsList className="grid w-full max-w-4xl grid-cols-6">
           <TabsTrigger value="projects" className="flex items-center gap-2">
             <ImageIcon className="h-4 w-4" />
-            Projects ({projects.length})
+            Projects
           </TabsTrigger>
           <TabsTrigger value="blog" className="flex items-center gap-2">
             <FileText className="h-4 w-4" />
-            Blog ({blogPosts.length})
+            Blog
+          </TabsTrigger>
+          <TabsTrigger value="ai-generator" className="flex items-center gap-2">
+            <Sparkles className="h-4 w-4" />
+            AI Generator
+          </TabsTrigger>
+          <TabsTrigger value="drafts" className="flex items-center gap-2">
+            <FileEdit className="h-4 w-4" />
+            Drafts
           </TabsTrigger>
           <TabsTrigger value="contacts" className="flex items-center gap-2">
             <Mail className="h-4 w-4" />
@@ -269,6 +281,179 @@ export default function AdminPage() {
                         size="sm"
                         variant="destructive"
                         onClick={() => deleteBlogPost(post._id)}
+                      >
+                        <Trash2 className="h-4 w-4 mr-2" />
+                        Delete
+                      </Button>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          )}
+        </TabsContent>
+
+        <TabsContent value="ai-generator" className="space-y-6">
+          <div className="flex justify-between items-center mb-4">
+            <div>
+              <h2 className="text-2xl font-bold text-red-700">AI Blog Post Generator</h2>
+              <p className="text-gray-600 mt-1">Generate comprehensive, SEO-optimized blog posts about tractors and machinery</p>
+            </div>
+          </div>
+
+          <AIBlogGenerator onSuccess={() => {
+            // Optionally refresh drafts or switch to drafts tab
+            toast.success("Check the Drafts tab to review your AI-generated post!")
+          }} />
+
+          <div className="border-t pt-6 mt-6">
+            <h3 className="font-semibold text-lg mb-3">How It Works</h3>
+            <div className="grid md:grid-cols-2 gap-4">
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-base">1. Enter Your Topic</CardTitle>
+                </CardHeader>
+                <CardContent className="text-sm text-gray-600">
+                  Type in the specific tractor model or machinery you want to write about. Be specific - include make, model, and year if possible.
+                </CardContent>
+              </Card>
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-base">2. Add Keywords (Optional)</CardTitle>
+                </CardHeader>
+                <CardContent className="text-sm text-gray-600">
+                  Include any specific terms you want in the article like "restoration", "vintage", or "collector value" to improve SEO.
+                </CardContent>
+              </Card>
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-base">3. Choose Tone</CardTitle>
+                </CardHeader>
+                <CardContent className="text-sm text-gray-600">
+                  Select the writing style: Professional for authority, Enthusiast for passion, Technical for specs, or Casual for friendliness.
+                </CardContent>
+              </Card>
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-base">4. Review & Publish</CardTitle>
+                </CardHeader>
+                <CardContent className="text-sm text-gray-600">
+                  The AI generates a 1200-1800 word article saved as a draft. Review it in the Drafts tab, edit if needed, then publish!
+                </CardContent>
+              </Card>
+            </div>
+          </div>
+        </TabsContent>
+
+        <TabsContent value="drafts" className="space-y-6">
+          <div className="flex justify-between items-center">
+            <div>
+              <h2 className="text-2xl font-bold text-red-700">Draft Blog Posts</h2>
+              <p className="text-gray-600 mt-1">Review AI-generated drafts and unpublished posts</p>
+            </div>
+            <Badge variant="outline" className="text-lg px-3 py-1">
+              {aiDrafts?.length || 0} AI Drafts
+            </Badge>
+          </div>
+
+          {!draftPosts || draftPosts.length === 0 ? (
+            <Alert>
+              <AlertDescription>
+                No drafts yet. Use the AI Generator to create blog posts automatically!
+              </AlertDescription>
+            </Alert>
+          ) : (
+            <div className="space-y-4">
+              {draftPosts.map((post) => (
+                <Card key={post._id} className={post.aiGenerated ? "border-blue-200 bg-blue-50" : ""}>
+                  <CardHeader>
+                    <div className="flex justify-between items-start">
+                      <div className="flex-1">
+                        <CardTitle className="flex items-center gap-2 flex-wrap">
+                          {post.title}
+                          <Badge variant="outline">Draft</Badge>
+                          {post.aiGenerated && (
+                            <Badge className="bg-blue-600">
+                              <Sparkles className="h-3 w-3 mr-1" />
+                              AI Generated
+                            </Badge>
+                          )}
+                          {post.status === "scheduled" && post.scheduledPublishDate && (
+                            <Badge className="bg-purple-600">
+                              <Calendar className="h-3 w-3 mr-1" />
+                              Scheduled: {new Date(post.scheduledPublishDate).toLocaleDateString()}
+                            </Badge>
+                          )}
+                        </CardTitle>
+                        <CardDescription className="mt-2">
+                          {post.excerpt || "No excerpt"}
+                        </CardDescription>
+                        {post.aiGenerated && post.aiPrompt && (
+                          <p className="text-xs text-gray-500 mt-2">
+                            <strong>AI Prompt:</strong> {post.aiPrompt.substring(0, 100)}...
+                          </p>
+                        )}
+                        <div className="flex gap-2 mt-2 text-xs text-gray-500">
+                          <span>Created: {new Date(post._creationTime).toLocaleDateString()}</span>
+                          {post.tags && <span>• Tags: {post.tags}</span>}
+                          <span>• Words: {post.content.split(/\s+/).length}</span>
+                        </div>
+                      </div>
+                    </div>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="flex flex-wrap gap-2">
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => {
+                          setEditingBlog(post)
+                          setShowBlogForm(true)
+                        }}
+                      >
+                        <Edit className="h-4 w-4 mr-2" />
+                        Edit
+                      </Button>
+                      <Button
+                        size="sm"
+                        className="bg-green-600 hover:bg-green-700"
+                        onClick={async () => {
+                          if (!confirm("Publish this post immediately?")) return
+                          try {
+                            await updateBlogMutation({
+                              id: post._id,
+                              title: post.title,
+                              slug: post.slug,
+                              content: post.content,
+                              excerpt: post.excerpt,
+                              featuredImage: post.featuredImage,
+                              published: true,
+                              status: "published",
+                              metaTitle: post.metaTitle,
+                              metaDescription: post.metaDescription,
+                              tags: post.tags,
+                            })
+                            toast.success("Post published successfully!")
+                          } catch (error) {
+                            toast.error("Failed to publish post")
+                          }
+                        }}
+                      >
+                        <Send className="h-4 w-4 mr-2" />
+                        Publish Now
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="destructive"
+                        onClick={async () => {
+                          if (!confirm("Delete this draft? This cannot be undone.")) return
+                          try {
+                            await deleteBlogMutation({ id: post._id })
+                            toast.success("Draft deleted")
+                          } catch (error) {
+                            toast.error("Failed to delete draft")
+                          }
+                        }}
                       >
                         <Trash2 className="h-4 w-4 mr-2" />
                         Delete

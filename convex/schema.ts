@@ -41,16 +41,27 @@ export default defineSchema({
     excerpt: v.optional(v.string()),
     featuredImage: v.optional(v.string()),
     published: v.boolean(),
+    status: v.union(
+      v.literal("draft"),
+      v.literal("scheduled"),
+      v.literal("published")
+    ),
+    scheduledPublishDate: v.optional(v.number()),
     metaTitle: v.optional(v.string()),
     metaDescription: v.optional(v.string()),
     tags: v.optional(v.string()),
+    aiGenerated: v.boolean(),
+    aiPrompt: v.optional(v.string()),
     userId: v.id("users"),
     createdAt: v.number(),
     updatedAt: v.number(),
   })
     .index("by_slug", ["slug"])
     .index("by_published", ["published"])
-    .index("by_user", ["userId"]),
+    .index("by_status", ["status"])
+    .index("by_scheduled", ["scheduledPublishDate"])
+    .index("by_user", ["userId"])
+    .index("by_ai_generated", ["aiGenerated"]),
 
   contactSubmissions: defineTable({
     name: v.string(),

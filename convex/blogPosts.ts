@@ -53,6 +53,44 @@ export const getById = query({
   },
 });
 
+// Query to get drafts (for admin)
+export const getDrafts = query({
+  args: {},
+  handler: async (ctx) => {
+    return await ctx.db
+      .query("blogPosts")
+      .withIndex("by_status", (q) => q.eq("status", "draft"))
+      .order("desc")
+      .collect();
+  },
+});
+
+// Query to get AI-generated drafts (for admin review)
+export const getAIDrafts = query({
+  args: {},
+  handler: async (ctx) => {
+    const drafts = await ctx.db
+      .query("blogPosts")
+      .withIndex("by_status", (q) => q.eq("status", "draft"))
+      .order("desc")
+      .collect();
+    
+    return drafts.filter(post => post.aiGenerated);
+  },
+});
+
+// Query to get scheduled posts (for admin)
+export const getScheduled = query({
+  args: {},
+  handler: async (ctx) => {
+    return await ctx.db
+      .query("blogPosts")
+      .withIndex("by_status", (q) => q.eq("status", "scheduled"))
+      .order("desc")
+      .collect();
+  },
+});
+
 // Mutation to create a blog post
 export const create = mutation({
   args: {
@@ -62,9 +100,13 @@ export const create = mutation({
     excerpt: v.optional(v.string()),
     featuredImage: v.optional(v.string()),
     published: v.boolean(),
+    status: v.optional(v.union(v.literal("draft"), v.literal("scheduled"), v.literal("published"))),
+    scheduledPublishDate: v.optional(v.number()),
     metaTitle: v.optional(v.string()),
     metaDescription: v.optional(v.string()),
     tags: v.optional(v.string()),
+    aiGenerated: v.optional(v.boolean()),
+    aiPrompt: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
     // Get the authenticated user ID
@@ -73,8 +115,22 @@ export const create = mutation({
       throw new Error("User must be authenticated to create a blog post");
     }
     
+    // Determine status based on published flag and scheduledPublishDate
+    let status = args.status;
+    if (!status) {
+      if (args.scheduledPublishDate && args.scheduledPublishDate > Date.now()) {
+        status = "scheduled";
+      } else if (args.published) {
+        status = "published";
+      } else {
+        status = "draft";
+      }
+    }
+    
     const postId = await ctx.db.insert("blogPosts", {
       ...args,
+      status,
+      aiGenerated: args.aiGenerated ?? false,
       userId: userId.subject as any,
       createdAt: Date.now(),
       updatedAt: Date.now(),
@@ -94,6 +150,8 @@ export const update = mutation({
     excerpt: v.optional(v.string()),
     featuredImage: v.optional(v.string()),
     published: v.boolean(),
+    status: v.optional(v.union(v.literal("draft"), v.literal("scheduled"), v.literal("published"))),
+    scheduledPublishDate: v.optional(v.number()),
     metaTitle: v.optional(v.string()),
     metaDescription: v.optional(v.string()),
     tags: v.optional(v.string()),
@@ -101,8 +159,21 @@ export const update = mutation({
   handler: async (ctx, args) => {
     const { id, ...updateData } = args;
     
+    // Determine status based on published flag and scheduledPublishDate
+    let status = updateData.status;
+    if (!status) {
+      if (updateData.scheduledPublishDate && updateData.scheduledPublishDate > Date.now()) {
+        status = "scheduled";
+      } else if (updateData.published) {
+        status = "published";
+      } else {
+        status = "draft";
+      }
+    }
+    
     await ctx.db.patch(id, {
       ...updateData,
+      status,
       updatedAt: Date.now(),
     });
     
