@@ -28,7 +28,7 @@ export function ProjectForm({ project, onClose, onSave }: ProjectFormProps) {
     description: "",
     status: "completed" as "completed" | "in-progress" | "planned",
     featured: false,
-    images: [] as { url: string; alt?: string }[],
+    images: [] as { url: string; alt?: string; order: number }[],
   })
 
   const createProject = useMutation(api.projects.create)
@@ -41,7 +41,11 @@ export function ProjectForm({ project, onClose, onSave }: ProjectFormProps) {
         description: project.description,
         status: project.status,
         featured: project.featured,
-        images: project.images || [],
+        images: (project.images || []).map((img: any, idx: number) => ({
+          url: img.url,
+          alt: img.alt,
+          order: img.order ?? idx
+        })),
       })
     }
   }, [project])
@@ -82,7 +86,11 @@ export function ProjectForm({ project, onClose, onSave }: ProjectFormProps) {
   const handleImagesUploaded = (urls: string[]) => {
     setFormData((prev) => ({
       ...prev,
-      images: [...prev.images, ...urls.map((url) => ({ url, alt: formData.title }))],
+      images: [...prev.images, ...urls.map((url, index) => ({ 
+        url, 
+        alt: formData.title,
+        order: prev.images.length + index
+      }))],
     }))
   }
 
@@ -98,7 +106,9 @@ export function ProjectForm({ project, onClose, onSave }: ProjectFormProps) {
       const newImages = [...prev.images]
       const [removed] = newImages.splice(fromIndex, 1)
       newImages.splice(toIndex, 0, removed)
-      return { ...prev, images: newImages }
+      // Update order numbers after reordering
+      const reorderedImages = newImages.map((img, idx) => ({ ...img, order: idx }))
+      return { ...prev, images: reorderedImages }
     })
   }
 
@@ -143,7 +153,7 @@ export function ProjectForm({ project, onClose, onSave }: ProjectFormProps) {
               <Label htmlFor="status">Status</Label>
               <Select
                 value={formData.status}
-                onValueChange={(value) => setFormData({ ...formData, status: value })}
+                onValueChange={(value) => setFormData({ ...formData, status: value as "completed" | "in-progress" | "planned" })}
               >
                 <SelectTrigger>
                   <SelectValue />
