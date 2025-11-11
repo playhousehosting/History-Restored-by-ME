@@ -49,8 +49,6 @@ export default function RegisterPage() {
     )
   }
 
-  const { signIn } = authActions;
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
@@ -67,7 +65,7 @@ export default function RegisterPage() {
     setIsLoading(true);
 
     try {
-      await signIn("password", { 
+      await authActions.signIn("password", { 
         email, 
         password, 
         name,

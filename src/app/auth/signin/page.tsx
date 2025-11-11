@@ -45,14 +45,12 @@ export default function SignInPage() {
     )
   }
 
-  const { signIn } = authActions;
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
 
     try {
-      await signIn("password", { email, password, flow: "signIn" });
+      await authActions.signIn("password", { email, password, flow: "signIn" });
       toast.success("Signed in successfully!");
       router.push("/admin");
     } catch (error) {
