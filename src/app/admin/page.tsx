@@ -6,9 +6,6 @@ import { useQuery, useMutation } from "convex/react"
 import { api } from "@/../convex/_generated/api"
 import { useAuthActions } from "@convex-dev/auth/react"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-
-// Force dynamic rendering to prevent SSG/SSR issues with Convex
-export const dynamic = 'force-dynamic'
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -19,6 +16,9 @@ import { toast } from "sonner"
 import { ProjectForm } from "@/components/admin/ProjectForm"
 import { BlogForm } from "@/components/admin/BlogForm"
 import type { Id } from "@/../convex/_generated/dataModel"
+
+// Force dynamic rendering to prevent SSG/SSR issues with Convex
+export const dynamic = 'force-dynamic'
 
 export default function AdminPage() {
   const router = useRouter()
