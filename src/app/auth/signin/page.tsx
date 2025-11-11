@@ -4,10 +4,14 @@ import { useAuthActions } from "@convex-dev/auth/react";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { useQuery } from "convex/react";
+import { api } from "@convex/_generated/api";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { AlertCircle } from "lucide-react";
 import { toast } from "sonner";
 
 // Force dynamic rendering
@@ -18,12 +22,13 @@ export default function SignInPage() {
   // DO NOT DESTRUCTURE - causes SSR issues with React 19
   const authActions = useAuthActions();
   const router = useRouter();
+  const settings = useQuery(api.siteSettings.get);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
   // Check if signIn is available (should always be true after ConvexAuth loads)
-  if (!authActions || !authActions.signIn) {
+  if (!authActions || !authActions.signIn || settings === undefined) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
         <div className="w-full max-w-md">
@@ -39,6 +44,37 @@ export default function SignInPage() {
         </div>
       </div>
     )
+  }
+
+  // Check if sign-in is disabled
+  if (!settings.signInEnabled) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4">
+        <Card className="w-full max-w-md">
+          <CardHeader className="space-y-1">
+            <CardTitle className="text-2xl font-bold">Sign-In Unavailable</CardTitle>
+            <CardDescription>
+              Sign-in is currently disabled
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <Alert>
+              <AlertCircle className="h-4 w-4" />
+              <AlertDescription>
+                Sign-in is temporarily unavailable. Please try again later or contact the site administrator if this is urgent.
+              </AlertDescription>
+            </Alert>
+            <div className="text-center pt-4">
+              <Link href="/">
+                <Button variant="outline" className="w-full">
+                  Return to Home
+                </Button>
+              </Link>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    );
   }
 
   const handleSubmit = async (e: React.FormEvent) => {

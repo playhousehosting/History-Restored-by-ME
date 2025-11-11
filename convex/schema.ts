@@ -78,4 +78,11 @@ export default defineSchema({
   })
     .index("by_status", ["status"])
     .index("by_created", ["createdAt"]),
+
+  siteSettings: defineTable({
+    registrationEnabled: v.boolean(),
+    signInEnabled: v.boolean(),
+    updatedAt: v.number(),
+    updatedBy: v.optional(v.id("users")),
+  }),
 });

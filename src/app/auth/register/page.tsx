@@ -4,10 +4,14 @@ import { useAuthActions } from "@convex-dev/auth/react";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { useQuery } from "convex/react";
+import { api } from "@convex/_generated/api";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { AlertCircle } from "lucide-react";
 import { toast } from "sonner";
 
 // Force dynamic rendering
@@ -18,6 +22,7 @@ export default function RegisterPage() {
   // DO NOT DESTRUCTURE - causes SSR issues with React 19
   const authActions = useAuthActions();
   const router = useRouter();
+  const settings = useQuery(api.siteSettings.get);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -25,7 +30,7 @@ export default function RegisterPage() {
   const [isLoading, setIsLoading] = useState(false);
 
   // Check if signIn is available (should always be true after ConvexAuth loads)
-  if (!authActions || !authActions.signIn) {
+  if (!authActions || !authActions.signIn || settings === undefined) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
         <div className="w-full max-w-md">
@@ -43,6 +48,43 @@ export default function RegisterPage() {
         </div>
       </div>
     )
+  }
+
+  // Check if registration is disabled
+  if (!settings.registrationEnabled) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4">
+        <Card className="w-full max-w-md">
+          <CardHeader className="space-y-1">
+            <CardTitle className="text-2xl font-bold">Registration Closed</CardTitle>
+            <CardDescription>
+              New account registration is currently unavailable
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <Alert>
+              <AlertCircle className="h-4 w-4" />
+              <AlertDescription>
+                Registration is temporarily disabled. Please check back later or contact the site administrator if you need access.
+              </AlertDescription>
+            </Alert>
+            <div className="text-center pt-4">
+              <Link href="/auth/signin">
+                <Button variant="outline" className="w-full">
+                  Return to Sign In
+                </Button>
+              </Link>
+            </div>
+            <div className="text-center text-sm text-muted-foreground">
+              Already have an account?{" "}
+              <Link href="/auth/signin" className="text-red-700 hover:underline">
+                Sign in here
+              </Link>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    );
   }
 
   const handleSubmit = async (e: React.FormEvent) => {

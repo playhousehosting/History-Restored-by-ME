@@ -11,11 +11,12 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge"
 import { Skeleton } from "@/components/ui/skeleton"
 import { Alert, AlertDescription } from "@/components/ui/alert"
-import { Plus, Edit, Trash2, Eye, ImageIcon, FileText, Mail, Users, CheckCircle, Clock, MessageCircle, Sparkles, FileEdit, Calendar, Send } from "lucide-react"
+import { Plus, Edit, Trash2, Eye, ImageIcon, FileText, Mail, Users, CheckCircle, Clock, MessageCircle, Sparkles, FileEdit, Calendar, Send, Settings } from "lucide-react"
 import { toast } from "sonner"
 import { ProjectForm } from "@/components/admin/ProjectForm"
 import { BlogForm } from "@/components/admin/BlogForm"
 import { AIBlogGenerator } from "@/components/admin/AIBlogGenerator"
+import SiteSettings from "@/components/admin/SiteSettings"
 import type { Id } from "@convex/_generated/dataModel"
 
 // Force dynamic rendering to prevent SSG/SSR issues with Convex
@@ -98,7 +99,7 @@ export default function AdminPage() {
       </div>
 
       <Tabs defaultValue="projects" className="space-y-6">
-        <TabsList className="grid w-full max-w-4xl grid-cols-6">
+        <TabsList className="grid w-full max-w-5xl grid-cols-7">
           <TabsTrigger value="projects" className="flex items-center gap-2">
             <ImageIcon className="h-4 w-4" />
             Projects
@@ -122,6 +123,10 @@ export default function AdminPage() {
           <TabsTrigger value="users" className="flex items-center gap-2">
             <Users className="h-4 w-4" />
             Users
+          </TabsTrigger>
+          <TabsTrigger value="settings" className="flex items-center gap-2">
+            <Settings className="h-4 w-4" />
+            Settings
           </TabsTrigger>
         </TabsList>
 
@@ -637,6 +642,10 @@ export default function AdminPage() {
               ))}
             </div>
           )}
+        </TabsContent>
+
+        <TabsContent value="settings" className="space-y-6">
+          <SiteSettings />
         </TabsContent>
       </Tabs>
 
