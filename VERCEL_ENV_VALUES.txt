@@ -1,0 +1,26 @@
+VERCEL ENVIRONMENT VARIABLES - COPY THESE EXACT VALUES
+================================================================
+
+Go to: https://vercel.com/playhousehosting/history-restored-by-me/settings/environment-variables
+
+Add these 3 environment variables (for Production, Preview, and Development):
+
+1. CONVEX_DEPLOYMENT
+   Value: usable-blackbird-499
+
+2. NEXT_PUBLIC_CONVEX_URL
+   Value: https://usable-blackbird-499.convex.cloud
+
+3. AUTH_SECRET
+   Value: iS5AGKyssI-dCUCIUj-jhGb4X_rXIhQ-mkREzpvFdRg
+
+================================================================
+
+IMPORTANT: After adding these variables, you must:
+1. Click "Save" for each variable
+2. Redeploy your project (either push a new commit or use "Redeploy" button)
+
+The production Convex deployment (usable-blackbird-499) is already deployed
+and has all your tables, indexes, and functions ready.
+
+================================================================

@@ -6,6 +6,9 @@ import { useQuery, useMutation } from "convex/react"
 import { api } from "@/../convex/_generated/api"
 import { useAuthActions } from "@convex-dev/auth/react"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+
+// Force dynamic rendering to prevent SSG/SSR issues with Convex
+export const dynamic = 'force-dynamic'
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"

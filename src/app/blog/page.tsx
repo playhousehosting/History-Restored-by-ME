@@ -4,6 +4,9 @@ import { useQuery } from "convex/react"
 import { api } from "@/../convex/_generated/api"
 import Link from "next/link"
 
+// Force dynamic rendering to prevent SSG/SSR issues with Convex
+export const dynamic = 'force-dynamic'
+
 export default function BlogPage() {
   const posts = useQuery(api.blogPosts.getPublished)
 

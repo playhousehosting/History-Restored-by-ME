@@ -5,6 +5,9 @@ import { api } from "@/../convex/_generated/api"
 import Link from "next/link"
 import Image from "next/image"
 
+// Force dynamic rendering to prevent SSG/SSR issues with Convex
+export const dynamic = 'force-dynamic'
+
 export default function GalleryPage() {
   const projects = useQuery(api.projects.getAll)
 
