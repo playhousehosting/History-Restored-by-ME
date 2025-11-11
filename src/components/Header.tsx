@@ -1,10 +1,14 @@
 "use client"
 
 import Link from "next/link"
-import { useSession, signOut } from "next-auth/react"
+import { useAuthActions } from "@convex-dev/auth/react"
+import { useQuery } from "convex/react"
+import { api } from "@/../convex/_generated/api"
 
 export default function Header() {
-  const { data: session } = useSession()
+  const { signOut } = useAuthActions()
+  // Check if user is authenticated by trying to get their identity
+  const viewer = useQuery(api.users.viewer)
 
   return (
     <header className="bg-red-800 text-white shadow-lg">
@@ -25,15 +29,15 @@ export default function Header() {
               Blog
             </Link>
             
-            {session ? (
+            {viewer ? (
               <>
-                {session.user?.role === "admin" && (
+                {viewer.role === "admin" && (
                   <Link href="/admin" className="hover:text-red-200 transition">
                     Admin
                   </Link>
                 )}
                 <button
-                  onClick={() => signOut()}
+                  onClick={() => void signOut()}
                   className="bg-red-700 hover:bg-red-900 px-4 py-2 rounded transition"
                 >
                   Sign Out
