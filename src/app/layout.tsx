@@ -1,7 +1,6 @@
 import type { Metadata } from "next"
 import { Inter } from "next/font/google"
 import "./globals.css"
-import { SessionProvider } from "next-auth/react"
 import { Toaster } from "@/components/ui/sonner"
 import Header from "@/components/Header"
 import Footer from "@/components/Footer"
@@ -23,14 +22,12 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <ConvexClientProvider>
-          <SessionProvider>
-            <div className="flex flex-col min-h-screen">
-              <Header />
-              <main className="flex-grow">{children}</main>
-              <Footer />
-            </div>
-            <Toaster richColors />
-          </SessionProvider>
+          <div className="flex flex-col min-h-screen">
+            <Header />
+            <main className="flex-grow">{children}</main>
+            <Footer />
+          </div>
+          <Toaster richColors />
         </ConvexClientProvider>
       </body>
     </html>
