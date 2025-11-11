@@ -64,6 +64,7 @@ Start with a compelling opening paragraph that hooks the reader, then provide de
 
     try {
       // Call Claude Haiku 4.5 API
+      console.log("Calling Anthropic API for topic:", topic);
       const message = await anthropic.messages.create({
         model: "claude-3-5-haiku-20241022", // Claude Haiku 4.5
         max_tokens: 4096,
@@ -76,6 +77,8 @@ Start with a compelling opening paragraph that hooks the reader, then provide de
         ],
       });
 
+      console.log("Anthropic API response received");
+
       // Extract the generated content
       const content = message.content[0].type === "text" 
         ? message.content[0].text 
@@ -84,6 +87,8 @@ Start with a compelling opening paragraph that hooks the reader, then provide de
       if (!content) {
         throw new Error("No content generated from AI");
       }
+      
+      console.log("Content generated, length:", content.length);
 
       // Generate SEO metadata
       const metaTitle = await generateMetaTitle(topic);
@@ -120,7 +125,23 @@ Start with a compelling opening paragraph that hooks the reader, then provide de
       };
     } catch (error: any) {
       console.error("AI generation error:", error);
-      throw new Error(`Failed to generate blog post: ${error.message}`);
+      console.error("Error details:", {
+        message: error.message,
+        status: error.status,
+        type: error.type,
+        name: error.name,
+      });
+      
+      // Provide more specific error messages
+      if (error.status === 401) {
+        throw new Error("Invalid Anthropic API key. Please check your ANTHROPIC_API_KEY in Convex dashboard.");
+      } else if (error.status === 429) {
+        throw new Error("API rate limit exceeded. Please try again in a few moments.");
+      } else if (error.message?.includes("API key")) {
+        throw new Error(`API key error: ${error.message}`);
+      }
+      
+      throw new Error(`Failed to generate blog post: ${error.message || "Unknown error"}`);
     }
   },
 });
