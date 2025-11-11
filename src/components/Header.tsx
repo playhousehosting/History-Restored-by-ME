@@ -9,6 +9,22 @@ export default function Header() {
   const { signOut } = useAuthActions()
   // Check if user is authenticated by trying to get their identity
   const viewer = useQuery(api.users.viewer)
+  
+  // Handle loading state
+  if (viewer === undefined) {
+    return (
+      <header className="bg-white shadow-md">
+        <div className="container mx-auto px-4 py-4 flex justify-between items-center">
+          <Link href="/" className="text-2xl font-bold text-green-600">
+            History Restored By Me
+          </Link>
+          <nav>
+            <div className="h-10 w-24 bg-gray-200 animate-pulse rounded" />
+          </nav>
+        </div>
+      </header>
+    )
+  }
 
   return (
     <header className="bg-red-800 text-white shadow-lg">
