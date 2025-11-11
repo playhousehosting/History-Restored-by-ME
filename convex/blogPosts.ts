@@ -62,11 +62,17 @@ export const create = mutation({
     excerpt: v.optional(v.string()),
     featuredImage: v.optional(v.string()),
     published: v.boolean(),
-    userId: v.id("users"),
   },
   handler: async (ctx, args) => {
+    // Get the authenticated user ID
+    const userId = await ctx.auth.getUserIdentity();
+    if (!userId) {
+      throw new Error("User must be authenticated to create a blog post");
+    }
+    
     const postId = await ctx.db.insert("blogPosts", {
       ...args,
+      userId: userId.subject as any,
       createdAt: Date.now(),
       updatedAt: Date.now(),
     });

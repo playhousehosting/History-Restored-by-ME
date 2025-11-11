@@ -77,7 +77,6 @@ export const create = mutation({
       v.literal("planned")
     ),
     featured: v.boolean(),
-    userId: v.id("users"),
     images: v.array(
       v.object({
         url: v.string(),
@@ -87,11 +86,18 @@ export const create = mutation({
     ),
   },
   handler: async (ctx, args) => {
+    // Get the authenticated user ID
+    const userId = await ctx.auth.getUserIdentity();
+    if (!userId) {
+      throw new Error("User must be authenticated to create a project");
+    }
+    
     const { images, ...projectData } = args;
     
     // Create project
     const projectId = await ctx.db.insert("projects", {
       ...projectData,
+      userId: userId.subject as any,
       createdAt: Date.now(),
       updatedAt: Date.now(),
     });
