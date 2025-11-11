@@ -10,6 +10,9 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 
+// Force dynamic rendering
+export const dynamic = 'force-dynamic'
+
 export default function RegisterPage() {
   const { signIn } = useAuthActions();
   const router = useRouter();
