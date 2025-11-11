@@ -3,11 +3,6 @@ import { action, internalMutation, internalQuery } from "./_generated/server";
 import { api, internal } from "./_generated/api";
 import Anthropic from "@anthropic-ai/sdk";
 
-// Initialize Anthropic client
-const anthropic = new Anthropic({
-  apiKey: process.env.ANTHROPIC_API_KEY!,
-});
-
 /**
  * Generate a comprehensive SEO-optimized blog post about tractors/machinery
  * using Claude Haiku 4.5
@@ -29,6 +24,20 @@ export const generateBlogPost = action({
     if (!userId) {
       throw new Error("Must be authenticated to generate blog posts");
     }
+
+    // Check for API key
+    const apiKey = process.env.ANTHROPIC_API_KEY;
+    if (!apiKey) {
+      throw new Error(
+        "ANTHROPIC_API_KEY is not configured. Please set it in your Convex dashboard: " +
+        "npx convex env set ANTHROPIC_API_KEY your-key-here"
+      );
+    }
+
+    // Initialize Anthropic client
+    const anthropic = new Anthropic({
+      apiKey: apiKey,
+    });
 
     // Create the prompt for Claude
     const prompt = `You are an expert content writer specializing in vintage tractors, agricultural machinery, and equipment restoration. 
