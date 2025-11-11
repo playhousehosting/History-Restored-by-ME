@@ -5,13 +5,8 @@ import { authTables } from "@convex-dev/auth/server";
 export default defineSchema({
   ...authTables,
   
-  users: defineTable({
-    email: v.string(),
-    name: v.optional(v.string()),
-    role: v.union(v.literal("user"), v.literal("admin")),
-    createdAt: v.number(),
-    updatedAt: v.number(),
-  }).index("by_email", ["email"]),
+  // Note: authTables already includes a users table with email and name
+  // We can add custom user metadata in a separate table if needed
 
   projects: defineTable({
     title: v.string(),
