@@ -45,103 +45,88 @@ export const generateBlogPost = action({
     });
 
     // Create the prompt for Claude based on format
-    const htmlPrompt = `You are an award-winning journalist writing for TIME Magazine. Create a captivating, deeply researched article about vintage agricultural machinery with the narrative power and visual richness of TIME's best feature stories.
+    const htmlPrompt = `YOU ARE AN HTML CODE GENERATOR. OUTPUT ONLY HTML CODE. NO EXPLANATIONS.
 
-ARTICLE TOPIC: "${topic}"
+TOPIC: "${topic}"
+TONE: ${tone}
+KEYWORDS: ${keywords || topic}
 
-=== TIME MAGAZINE WRITING STYLE REQUIREMENTS ===
+MANDATORY RULES:
+1. Start IMMEDIATELY with HTML tags - your first character must be "<"
+2. DO NOT write "Here is" or any introduction
+3. Every sentence MUST be inside HTML tags
+4. NO PLAIN TEXT ALLOWED
+5. Create a 1800-2500 word magazine article
 
-NARRATIVE VOICE:
-- Write with authority, elegance, and storytelling flair
-- Use vivid imagery and sensory details that transport readers
-- Tone: ${tone}, but always sophisticated and engaging
-- Weave in human interest elements and historical significance
-- Create emotional connection while maintaining journalistic integrity
+HTML STRUCTURE TO GENERATE:
 
-CONTENT DEPTH (1800-2500 words):
-- Opening: Cinematic scene-setting (3-4 paragraphs)
-- 6-8 Major sections with compelling subheadings
-- Rich technical detail presented accessibly
-- Historical context with specific dates, people, innovations
-- Cultural impact and lasting legacy
-- Expert insights and real-world applications
-- Keywords naturally integrated: ${keywords || topic}
+<div style="max-width: 900px; margin: 0 auto; padding: 40px 20px; font-family: 'Georgia', serif; line-height: 1.8; color: #2d3748; background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);">
 
-=== STRICT HTML FORMATTING - PROFESSIONAL PUBLICATION STANDARD ===
+<p style="font-size: 26px; line-height: 1.6; color: #1a202c; margin-bottom: 30px; font-weight: 500; border-left: 5px solid #dc2626; padding-left: 30px; background: rgba(255,255,255,0.9); padding: 25px 25px 25px 30px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+Opening hook paragraph with cinematic scene-setting that draws readers into the story...
+</p>
 
-⚠️ CRITICAL: Output ONLY HTML. NO plain text. NO markdown. Every word must be wrapped in tags.
+<p style="font-size: 20px; margin-bottom: 25px; background: rgba(255,255,255,0.9); padding: 20px; border-radius: 8px;">
+Second paragraph continuing the narrative with rich details and establishing significance...
+</p>
 
-REQUIRED HTML STRUCTURE:
+<p style="font-size: 20px; margin-bottom: 25px; background: rgba(255,255,255,0.9); padding: 20px; border-radius: 8px;">
+Third paragraph setting up what's to come in the article...
+</p>
 
-<p class="lead">Opening paragraph with larger, attention-grabbing text that hooks the reader immediately.</p>
+<h2 style="font-size: 36px; font-weight: 700; color: #1a202c; margin: 60px 0 30px 0; padding-bottom: 15px; border-bottom: 4px solid #dc2626; text-transform: uppercase; letter-spacing: 1px; background: rgba(255,255,255,0.95); padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+First Major Section Title
+</h2>
 
-<p>Second paragraph continuing the narrative with vivid details and setting the stage.</p>
+<p style="font-size: 20px; margin-bottom: 25px; background: rgba(255,255,255,0.9); padding: 20px; border-radius: 8px;">
+Compelling narrative with <strong style="color: #dc2626; background: #fef2f2; padding: 2px 6px; border-radius: 3px;">key terms highlighted</strong> and <em style="color: #7c3aed;">technical details</em> woven naturally...
+</p>
 
-<p>Third paragraph establishing the significance and what's to come.</p>
+<h3 style="font-size: 28px; font-weight: 600; color: #dc2626; margin: 40px 0 20px 0; background: rgba(255,255,255,0.9); padding: 15px 20px; border-radius: 8px; border-left: 5px solid #dc2626;">
+Subsection Title
+</h3>
 
-<h2>First Major Section: Compelling Title</h2>
+<p style="font-size: 20px; margin-bottom: 25px; background: rgba(255,255,255,0.9); padding: 20px; border-radius: 8px;">
+Detailed explanation with accessible language...
+</p>
 
-<p>Rich narrative paragraph with <strong>key terms emphasized</strong> and <em>subtle technical details</em> woven naturally into storytelling.</p>
-
-<h3>Subsection: Specific Aspect</h3>
-
-<p>Detailed explanation with technical precision but accessible language.</p>
-
-<ul>
-<li><strong>Specification Name:</strong> Detailed value and significance</li>
-<li><strong>Feature Name:</strong> What it means and why it matters</li>
-<li><strong>Innovation:</strong> Historical context and impact</li>
+<ul style="font-size: 19px; margin: 30px 0; padding-left: 40px; background: rgba(255,255,255,0.9); padding: 25px 25px 25px 60px; border-radius: 8px; list-style-type: none;">
+<li style="margin-bottom: 15px; position: relative; padding-left: 10px;"><span style="color: #dc2626; font-size: 24px; position: absolute; left: -30px;">●</span> <strong style="color: #1a202c;">Specification:</strong> Details and significance</li>
+<li style="margin-bottom: 15px; position: relative; padding-left: 10px;"><span style="color: #dc2626; font-size: 24px; position: absolute; left: -30px;">●</span> <strong style="color: #1a202c;">Feature:</strong> What it means and why it matters</li>
+<li style="margin-bottom: 15px; position: relative; padding-left: 10px;"><span style="color: #dc2626; font-size: 24px; position: absolute; left: -30px;">●</span> <strong style="color: #1a202c;">Innovation:</strong> Historical context and impact</li>
 </ul>
 
-<blockquote>
-<p>"Pull quotes or significant statements that deserve emphasis" - Source or context</p>
+<blockquote style="font-size: 24px; font-style: italic; color: #374151; border-left: 6px solid #dc2626; padding: 30px 40px; margin: 50px 0; background: linear-gradient(to right, #fee2e2, #fef2f2); border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+<p style="margin: 0; font-size: 24px;">"Powerful pull quote or insight that captures the essence of this section"</p>
 </blockquote>
 
-<h2>Second Major Section: Another Engaging Title</h2>
+<!-- CONTINUE WITH 5-7 MORE MAJOR SECTIONS -->
+<!-- Each with H2, multiple H3 subsections, paragraphs, lists, and blockquotes -->
+<!-- Total: 1800-2500 words -->
 
-<p>Continue with rich, magazine-quality prose...</p>
+<h2 style="font-size: 36px; font-weight: 700; color: #1a202c; margin: 60px 0 30px 0; padding-bottom: 15px; border-bottom: 4px solid #dc2626; text-transform: uppercase; letter-spacing: 1px; background: rgba(255,255,255,0.95); padding: 20px; border-radius: 8px;">
+Legacy and Conclusion
+</h2>
 
-=== REQUIRED SECTIONS (Adapt titles creatively) ===
+<p style="font-size: 20px; margin-bottom: 25px; background: rgba(255,255,255,0.9); padding: 20px; border-radius: 8px;">
+Final thoughts on lasting impact and significance...
+</p>
 
-1. <h2>Opening Hook Section</h2> - Set the scene dramatically
-2. <h2>Historical Genesis</h2> - Origin story with dates, people, innovations
-3. <h2>Engineering Marvel</h2> - Technical specs presented compellingly
-4. <h2>Design Philosophy</h2> - Why it was built this way
-5. <h2>Cultural Impact</h2> - How it changed farming/society
-6. <h2>Restoration & Preservation</h2> - Practical guidance
-7. <h2>Collector's Perspective</h2> - Value, rarity, market
-8. <h2>Legacy & Conclusion</h2> - Lasting impact and future
+</div>
 
-=== HTML ELEMENTS YOU MUST USE ===
+CONTENT REQUIREMENTS:
+- Write ${tone} tone with storytelling flair
+- Include specific dates, model numbers, specifications
+- Weave in historical context and cultural impact
+- Make technical details accessible and engaging
+- Create 6-8 major sections with compelling titles
+- Use 12-20 subsections (H3 headings)
+- Include blockquotes for emphasis
+- Rich bullet lists with specifications
 
-✓ <p></p> - Every single paragraph
-✓ <p class="lead"></p> - Opening paragraph only
-✓ <h2></h2> - Major sections (6-8 times)
-✓ <h3></h3> - Subsections (12-20 times)
-✓ <strong></strong> - Key terms, specs, names
-✓ <em></em> - Technical terms, subtle emphasis
-✓ <ul><li></li></ul> - Specifications, features, lists
-✓ <ol><li></li></ol> - Step-by-step processes
-✓ <blockquote><p></p></blockquote> - Pull quotes, key insights
+BEGIN YOUR RESPONSE WITH: <div style="max-width: 900px;
 
-✗ NO bare text outside tags
-✗ NO markdown syntax (##, **, -, etc.)
-✗ NO <b> or <i> tags
-✗ NO plain paragraphs without <p> tags
-
-=== WRITING QUALITY CHECKLIST ===
-
-□ Every paragraph has narrative flow
-□ Technical details explained accessibly  
-□ Specific dates, numbers, specifications included
-□ Human elements and stories woven in
-□ Compelling subheadings that make you want to read more
-□ Rich vocabulary and varied sentence structure
-□ Opens with a scene or compelling hook
-□ Closes with lasting impact and significance
-□ 100% HTML formatted - zero plain text
-
-Begin writing the article NOW in pure HTML:`;
+DO NOT WRITE ANY INTRODUCTORY TEXT. OUTPUT ONLY HTML CODE.`;
 
     const markdownPrompt = `You are an expert content writer specializing in vintage tractors, agricultural machinery, and equipment restoration. Create a professional, magazine-quality blog post.
 
