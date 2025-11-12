@@ -45,70 +45,103 @@ export const generateBlogPost = action({
     });
 
     // Create the prompt for Claude based on format
-    const htmlPrompt = `You are an expert content writer specializing in vintage tractors, agricultural machinery, and equipment restoration. Create a professional, magazine-quality blog post.
+    const htmlPrompt = `You are an award-winning journalist writing for TIME Magazine. Create a captivating, deeply researched article about vintage agricultural machinery with the narrative power and visual richness of TIME's best feature stories.
 
-Write a comprehensive, SEO-optimized blog post about: "${topic}"
+ARTICLE TOPIC: "${topic}"
 
-CONTENT REQUIREMENTS:
-- Length: 1500-2000 words (comprehensive and detailed)
-- Tone: ${tone}
-- Include specific technical details, history, and restoration insights
-- Create engaging narrative that captivates readers
-- Natural keyword integration: ${keywords || topic}
-- Include maintenance tips, historical context, and collector value insights
-- Use specific model numbers, years, and technical specifications
-- Add expert insights and practical advice
-- Include troubleshooting tips where relevant
+=== TIME MAGAZINE WRITING STYLE REQUIREMENTS ===
 
-STRUCTURE REQUIREMENTS:
-1. Opening Hook (2-3 paragraphs): Compelling introduction that draws readers in
-2. 5-7 Main Sections with H2 headings (Historical Context, Technical Specs, Design Features, Restoration Guide, Maintenance Tips, Collector Value, etc.)
-3. Each main section should have 2-4 subsections with H3 headings
-4. Practical lists for specifications, tips, and procedures
-5. Strong conclusion that summarizes key points
+NARRATIVE VOICE:
+- Write with authority, elegance, and storytelling flair
+- Use vivid imagery and sensory details that transport readers
+- Tone: ${tone}, but always sophisticated and engaging
+- Weave in human interest elements and historical significance
+- Create emotional connection while maintaining journalistic integrity
 
-CRITICAL HTML FORMATTING RULES - YOU MUST FOLLOW EXACTLY:
-1. EVERY paragraph MUST be wrapped in <p></p> tags
-2. EVERY main section title MUST use <h2></h2>
-3. EVERY subsection title MUST use <h3></h3>
-4. ALL bullet lists MUST use <ul><li></li></ul>
-5. ALL numbered lists MUST use <ol><li></li></ol>
-6. Use <strong></strong> for emphasis (NOT <b>)
-7. Use <em></em> for subtle emphasis (NOT <i>)
-8. NO PLAIN TEXT - Everything must be in HTML tags
-9. NO MARKDOWN - Only HTML is allowed
+CONTENT DEPTH (1800-2500 words):
+- Opening: Cinematic scene-setting (3-4 paragraphs)
+- 6-8 Major sections with compelling subheadings
+- Rich technical detail presented accessibly
+- Historical context with specific dates, people, innovations
+- Cultural impact and lasting legacy
+- Expert insights and real-world applications
+- Keywords naturally integrated: ${keywords || topic}
 
-MANDATORY FORMAT EXAMPLE:
-<p>The 1950 Ford 8N tractor represents a pivotal moment in American agricultural history, embodying the perfect blend of innovation, reliability, and affordability that revolutionized small-farm operations across the nation.</p>
+=== STRICT HTML FORMATTING - PROFESSIONAL PUBLICATION STANDARD ===
 
-<p>When Ford introduced this iconic machine, they didn't just create another tractor—they crafted a legend that would endure for generations.</p>
+⚠️ CRITICAL: Output ONLY HTML. NO plain text. NO markdown. Every word must be wrapped in tags.
 
-<h2>Historical Development and Innovation</h2>
+REQUIRED HTML STRUCTURE:
 
-<p>The Ford 8N emerged in 1947 as a groundbreaking advancement over its predecessor, the 9N model. This evolution brought several key improvements that would define modern tractor design.</p>
+<p class="lead">Opening paragraph with larger, attention-grabbing text that hooks the reader immediately.</p>
 
-<h3>Key Innovations and Features</h3>
+<p>Second paragraph continuing the narrative with vivid details and setting the stage.</p>
+
+<p>Third paragraph establishing the significance and what's to come.</p>
+
+<h2>First Major Section: Compelling Title</h2>
+
+<p>Rich narrative paragraph with <strong>key terms emphasized</strong> and <em>subtle technical details</em> woven naturally into storytelling.</p>
+
+<h3>Subsection: Specific Aspect</h3>
+
+<p>Detailed explanation with technical precision but accessible language.</p>
 
 <ul>
-<li><strong>Four-Speed Transmission:</strong> Upgraded from the three-speed design</li>
-<li><strong>Position Control:</strong> Revolutionary hydraulic system</li>
-<li><strong>Improved PTO:</strong> Better power take-off capabilities</li>
+<li><strong>Specification Name:</strong> Detailed value and significance</li>
+<li><strong>Feature Name:</strong> What it means and why it matters</li>
+<li><strong>Innovation:</strong> Historical context and impact</li>
 </ul>
 
-<h2>Technical Specifications</h2>
+<blockquote>
+<p>"Pull quotes or significant statements that deserve emphasis" - Source or context</p>
+</blockquote>
 
-<p>Understanding the technical details is crucial for any restoration project or maintenance routine.</p>
+<h2>Second Major Section: Another Engaging Title</h2>
 
-<h3>Engine Details</h3>
+<p>Continue with rich, magazine-quality prose...</p>
 
-<ul>
-<li><strong>Engine Type:</strong> Four-cylinder L-head gasoline engine</li>
-<li><strong>Displacement:</strong> 120 cubic inches</li>
-<li><strong>Horsepower:</strong> 23.5 belt hp, 19.2 drawbar hp</li>
-<li><strong>Bore and Stroke:</strong> 3.19" x 3.75"</li>
-</ul>
+=== REQUIRED SECTIONS (Adapt titles creatively) ===
 
-Continue this exact format throughout the ENTIRE article. Every sentence in proper HTML tags. No exceptions.`;
+1. <h2>Opening Hook Section</h2> - Set the scene dramatically
+2. <h2>Historical Genesis</h2> - Origin story with dates, people, innovations
+3. <h2>Engineering Marvel</h2> - Technical specs presented compellingly
+4. <h2>Design Philosophy</h2> - Why it was built this way
+5. <h2>Cultural Impact</h2> - How it changed farming/society
+6. <h2>Restoration & Preservation</h2> - Practical guidance
+7. <h2>Collector's Perspective</h2> - Value, rarity, market
+8. <h2>Legacy & Conclusion</h2> - Lasting impact and future
+
+=== HTML ELEMENTS YOU MUST USE ===
+
+✓ <p></p> - Every single paragraph
+✓ <p class="lead"></p> - Opening paragraph only
+✓ <h2></h2> - Major sections (6-8 times)
+✓ <h3></h3> - Subsections (12-20 times)
+✓ <strong></strong> - Key terms, specs, names
+✓ <em></em> - Technical terms, subtle emphasis
+✓ <ul><li></li></ul> - Specifications, features, lists
+✓ <ol><li></li></ol> - Step-by-step processes
+✓ <blockquote><p></p></blockquote> - Pull quotes, key insights
+
+✗ NO bare text outside tags
+✗ NO markdown syntax (##, **, -, etc.)
+✗ NO <b> or <i> tags
+✗ NO plain paragraphs without <p> tags
+
+=== WRITING QUALITY CHECKLIST ===
+
+□ Every paragraph has narrative flow
+□ Technical details explained accessibly  
+□ Specific dates, numbers, specifications included
+□ Human elements and stories woven in
+□ Compelling subheadings that make you want to read more
+□ Rich vocabulary and varied sentence structure
+□ Opens with a scene or compelling hook
+□ Closes with lasting impact and significance
+□ 100% HTML formatted - zero plain text
+
+Begin writing the article NOW in pure HTML:`;
 
     const markdownPrompt = `You are an expert content writer specializing in vintage tractors, agricultural machinery, and equipment restoration. Create a professional, magazine-quality blog post.
 
