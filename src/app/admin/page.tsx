@@ -190,13 +190,15 @@ export default function AdminPage() {
                         {project.images?.length || 0} images
                       </Badge>
                     </div>
-                    <div className="flex gap-2">
+                    <div className="flex flex-col sm:flex-row gap-2">
                       <Button
                         size="sm"
                         variant="outline"
                         onClick={() => router.push(`/gallery/${project._id}`)}
+                        className="w-full sm:w-auto justify-start sm:justify-center"
                       >
-                        <Eye className="h-4 w-4" />
+                        <Eye className="h-4 w-4 mr-2" />
+                        <span>View Project</span>
                       </Button>
                       <Button
                         size="sm"
@@ -205,15 +207,19 @@ export default function AdminPage() {
                           setEditingProject(project)
                           setShowProjectForm(true)
                         }}
+                        className="w-full sm:w-auto justify-start sm:justify-center"
                       >
-                        <Edit className="h-4 w-4" />
+                        <Edit className="h-4 w-4 mr-2" />
+                        <span>Edit</span>
                       </Button>
                       <Button
                         size="sm"
                         variant="destructive"
                         onClick={() => deleteProject(project._id)}
+                        className="w-full sm:w-auto justify-start sm:justify-center"
                       >
-                        <Trash2 className="h-4 w-4" />
+                        <Trash2 className="h-4 w-4 mr-2" />
+                        <span>Delete</span>
                       </Button>
                     </div>
                   </CardContent>
@@ -266,14 +272,15 @@ export default function AdminPage() {
                     </div>
                   </CardHeader>
                   <CardContent>
-                    <div className="flex gap-2">
+                    <div className="flex flex-col sm:flex-row gap-2">
                       <Button
                         size="sm"
                         variant="outline"
                         onClick={() => router.push(`/blog/${post.slug}`)}
+                        className="w-full sm:w-auto justify-start sm:justify-center"
                       >
                         <Eye className="h-4 w-4 mr-2" />
-                        View
+                        View Post
                       </Button>
                       <Button
                         size="sm"
@@ -282,14 +289,16 @@ export default function AdminPage() {
                           setEditingBlog(post)
                           setShowBlogForm(true)
                         }}
+                        className="w-full sm:w-auto justify-start sm:justify-center"
                       >
                         <Edit className="h-4 w-4 mr-2" />
-                        Edit
+                        Edit Post
                       </Button>
                       <Button
                         size="sm"
                         variant="destructive"
                         onClick={() => deleteBlogPost(post._id)}
+                        className="w-full sm:w-auto justify-start sm:justify-center"
                       >
                         <Trash2 className="h-4 w-4 mr-2" />
                         Delete
@@ -411,7 +420,7 @@ export default function AdminPage() {
                     </div>
                   </CardHeader>
                   <CardContent>
-                    <div className="flex flex-wrap gap-2">
+                    <div className="flex flex-col sm:flex-row gap-2">
                       <Button
                         size="sm"
                         variant="outline"
@@ -419,13 +428,14 @@ export default function AdminPage() {
                           setEditingBlog(post)
                           setShowBlogForm(true)
                         }}
+                        className="w-full sm:w-auto justify-start sm:justify-center"
                       >
                         <Edit className="h-4 w-4 mr-2" />
-                        Edit
+                        Edit Draft
                       </Button>
                       <Button
                         size="sm"
-                        className="bg-green-600 hover:bg-green-700"
+                        className="bg-green-600 hover:bg-green-700 w-full sm:w-auto justify-start sm:justify-center"
                         onClick={async () => {
                           if (!confirm("Publish this post immediately?")) return
                           try {
@@ -463,9 +473,10 @@ export default function AdminPage() {
                             toast.error("Failed to delete draft")
                           }
                         }}
+                        className="w-full sm:w-auto justify-start sm:justify-center"
                       >
                         <Trash2 className="h-4 w-4 mr-2" />
-                        Delete
+                        Delete Draft
                       </Button>
                     </div>
                   </CardContent>
@@ -520,7 +531,7 @@ export default function AdminPage() {
                     <div className="mb-4 p-4 bg-gray-50 rounded-lg border">
                       <p className="text-sm whitespace-pre-wrap">{submission.message}</p>
                     </div>
-                    <div className="flex gap-2">
+                    <div className="flex flex-col sm:flex-row gap-2">
                       {submission.status === "new" && (
                         <Button
                           size="sm"
@@ -533,6 +544,7 @@ export default function AdminPage() {
                               toast.error("Failed to update status")
                             }
                           }}
+                          className="w-full sm:w-auto justify-start sm:justify-center"
                         >
                           <CheckCircle className="h-4 w-4 mr-2" />
                           Mark as Read
@@ -550,6 +562,7 @@ export default function AdminPage() {
                               toast.error("Failed to update status")
                             }
                           }}
+                          className="w-full sm:w-auto justify-start sm:justify-center"
                         >
                           <MessageCircle className="h-4 w-4 mr-2" />
                           Mark as Responded
@@ -567,9 +580,10 @@ export default function AdminPage() {
                             toast.error("Failed to delete submission")
                           }
                         }}
+                        className="w-full sm:w-auto justify-start sm:justify-center"
                       >
                         <Trash2 className="h-4 w-4 mr-2" />
-                        Delete
+                        Delete Submission
                       </Button>
                     </div>
                   </CardContent>
