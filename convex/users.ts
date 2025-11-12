@@ -1,5 +1,6 @@
 import { v } from "convex/values";
-import { mutation, query } from "./_generated/server";
+import { action, mutation, query } from "./_generated/server";
+import { api } from "./_generated/api";
 import { auth } from "./auth";
 
 // Query to get the current authenticated user
@@ -38,33 +39,61 @@ export const getAll = query({
   },
 });
 
-// Create a new user as admin - uses action to call register endpoint
-export const createUserAsAdmin = mutation({
+// Action to create a new user as admin (with password hashing in Node environment)
+export const createUserAsAdmin = action({
   args: {
     name: v.string(),
     email: v.string(),
     password: v.string(),
   },
   handler: async (ctx, args) => {
-    const userId = await auth.getUserId(ctx);
+    // Verify admin is authenticated
+    const userId = await ctx.runQuery(api.users.viewer);
     if (!userId) {
       throw new Error("Not authenticated - admin access required");
     }
 
     // Check if email already exists
-    const existingUser = await ctx.db
-      .query("users")
-      .filter((q) => q.eq(q.field("email"), args.email))
-      .first();
-
+    const existingUser = await ctx.runQuery(api.users.checkEmailExists, { email: args.email });
     if (existingUser) {
       throw new Error("A user with this email already exists");
     }
 
-    // Use bcrypt to hash the password (same as Convex auth uses)
-    const bcrypt = require("bcryptjs");
+    // Use Node.js bcrypt for password hashing (available in actions)
+    const bcrypt = await import("bcryptjs");
     const hashedPassword = await bcrypt.hash(args.password, 10);
 
+    // Create the user via mutation
+    const result = await ctx.runMutation(api.users.createUserWithHash, {
+      name: args.name,
+      email: args.email,
+      hashedPassword,
+    });
+
+    return result;
+  },
+});
+
+// Helper query to check if email exists
+export const checkEmailExists = query({
+  args: { email: v.string() },
+  handler: async (ctx, args) => {
+    const existingUser = await ctx.db
+      .query("users")
+      .filter((q) => q.eq(q.field("email"), args.email))
+      .first();
+    return !!existingUser;
+  },
+});
+
+// Helper mutation to create user with pre-hashed password
+export const createUserWithHash = mutation({
+  args: {
+    name: v.string(),
+    email: v.string(),
+    hashedPassword: v.string(),
+  },
+  handler: async (ctx, args) => {
     // Create the user
     const newUserId = await ctx.db.insert("users", {
       name: args.name,
@@ -79,7 +108,7 @@ export const createUserAsAdmin = mutation({
       userId: newUserId,
       provider: "password",
       providerAccountId: args.email,
-      secret: hashedPassword,
+      secret: args.hashedPassword,
     });
 
     return { success: true, userId: newUserId };

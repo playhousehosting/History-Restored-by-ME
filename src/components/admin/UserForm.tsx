@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { useMutation } from "convex/react"
+import { useAction } from "convex/react"
 import { api } from "@convex/_generated/api"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -22,7 +22,7 @@ export function UserForm({ isOpen, onClose, onSuccess }: UserFormProps) {
   const [password, setPassword] = useState("")
   const [isSubmitting, setIsSubmitting] = useState(false)
 
-  const createUser = useMutation(api.users.createUserAsAdmin)
+  const createUser = useAction(api.users.createUserAsAdmin)
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
