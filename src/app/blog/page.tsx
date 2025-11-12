@@ -3,6 +3,10 @@
 import { useQuery } from "convex/react"
 import { api } from "@convex/_generated/api"
 import Link from "next/link"
+import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb"
+import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card"
+import { Badge } from "@/components/ui/badge"
+import { Home, Sparkles } from "lucide-react"
 
 // Force dynamic rendering to prevent SSG/SSR issues with Convex
 export const dynamic = 'force-dynamic'
@@ -29,6 +33,20 @@ export default function BlogPage() {
 
   return (
     <div className="container mx-auto px-4 py-12">
+      <Breadcrumb className="mb-8">
+        <BreadcrumbList>
+          <BreadcrumbItem>
+            <BreadcrumbLink href="/">
+              <Home className="h-4 w-4" />
+            </BreadcrumbLink>
+          </BreadcrumbItem>
+          <BreadcrumbSeparator />
+          <BreadcrumbItem>
+            <BreadcrumbPage>Blog</BreadcrumbPage>
+          </BreadcrumbItem>
+        </BreadcrumbList>
+      </Breadcrumb>
+      
       <h1 className="text-4xl font-bold mb-8 text-center">Blog</h1>
       <p className="text-lg text-gray-600 text-center mb-12 max-w-2xl mx-auto">
         Read about our restoration projects, techniques, and insights from the workshop.
@@ -42,30 +60,51 @@ export default function BlogPage() {
       ) : (
         <div className="max-w-4xl mx-auto space-y-8">
           {posts.map((post) => (
-            <article
-              key={post._id}
-              className="bg-white rounded-lg shadow-md p-8 hover:shadow-xl transition"
-            >
-              <Link href={`/blog/${post.slug}`}>
-                <h2 className="text-2xl font-bold mb-3 hover:text-green-700 transition">
-                  {post.title}
-                </h2>
-              </Link>
-              {post.excerpt && (
-                <p className="text-gray-700 mb-4 text-lg">{post.excerpt}</p>
-              )}
-              <div className="flex items-center justify-between text-sm text-gray-500">
-                <span>
-                  {new Date(post.createdAt).toLocaleDateString()}
-                </span>
-                <Link
-                  href={`/blog/${post.slug}`}
-                  className="text-green-700 hover:text-green-800 font-semibold"
-                >
-                  Read more →
-                </Link>
-              </div>
-            </article>
+            <HoverCard key={post._id}>
+              <HoverCardTrigger asChild>
+                <article className="bg-white rounded-lg shadow-md p-8 hover:shadow-xl transition cursor-pointer">
+                  <Link href={`/blog/${post.slug}`}>
+                    <div className="flex items-start justify-between mb-3">
+                      <h2 className="text-2xl font-bold hover:text-red-700 transition flex-1">
+                        {post.title}
+                      </h2>
+                      {post.aiGenerated && (
+                        <Badge variant="outline" className="ml-4">
+                          <Sparkles className="h-3 w-3 mr-1" />
+                          AI
+                        </Badge>
+                      )}
+                    </div>
+                  </Link>
+                  {post.excerpt && (
+                    <p className="text-gray-700 mb-4 text-lg">{post.excerpt}</p>
+                  )}
+                  <div className="flex items-center justify-between text-sm text-gray-500">
+                    <span>
+                      {new Date(post.createdAt).toLocaleDateString()}
+                    </span>
+                    <Link
+                      href={`/blog/${post.slug}`}
+                      className="text-red-700 hover:text-red-800 font-semibold"
+                    >
+                      Read more →
+                    </Link>
+                  </div>
+                </article>
+              </HoverCardTrigger>
+              <HoverCardContent className="w-80">
+                <div className="space-y-2">
+                  <h4 className="text-sm font-semibold line-clamp-2">{post.title}</h4>
+                  <p className="text-sm text-gray-600 line-clamp-3">
+                    {post.excerpt || post.content.replace(/<[^>]*>/g, "").substring(0, 150) + "..."}
+                  </p>
+                  <div className="text-xs text-gray-500 pt-2 flex items-center justify-between">
+                    <span>{new Date(post.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</span>
+                    {post.aiGenerated && <span className="text-blue-600">AI Generated</span>}
+                  </div>
+                </div>
+              </HoverCardContent>
+            </HoverCard>
           ))}
         </div>
       )}

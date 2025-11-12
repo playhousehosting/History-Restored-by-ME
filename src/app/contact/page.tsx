@@ -8,8 +8,11 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb"
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { toast } from "sonner"
-import { Loader2, Mail, Phone, User, MessageSquare } from "lucide-react"
+import { Loader2, Mail, Phone, User, MessageSquare, Home, Info } from "lucide-react"
 
 export default function ContactPage() {
   const [loading, setLoading] = useState(false)
@@ -56,6 +59,20 @@ export default function ContactPage() {
   return (
     <div className="container mx-auto px-4 py-12">
       <div className="max-w-4xl mx-auto">
+        <Breadcrumb className="mb-8">
+          <BreadcrumbList>
+            <BreadcrumbItem>
+              <BreadcrumbLink href="/">
+                <Home className="h-4 w-4" />
+              </BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbSeparator />
+            <BreadcrumbItem>
+              <BreadcrumbPage>Contact</BreadcrumbPage>
+            </BreadcrumbItem>
+          </BreadcrumbList>
+        </Breadcrumb>
+        
         {/* Header */}
         <div className="text-center mb-12">
           <h1 className="text-4xl font-bold mb-4">Get in Touch</h1>
@@ -106,31 +123,47 @@ export default function ContactPage() {
 
             <Card>
               <CardHeader>
-                <CardTitle>Why Choose Us?</CardTitle>
+                <CardTitle className="flex items-center justify-between">
+                  Frequently Asked Questions
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <Button variant="ghost" size="icon">
+                        <Info className="h-4 w-4" />
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent>
+                      <p className="text-sm">Common questions about our restoration services</p>
+                    </PopoverContent>
+                  </Popover>
+                </CardTitle>
               </CardHeader>
               <CardContent>
-                <ul className="space-y-2 text-sm text-gray-600">
-                  <li className="flex items-center gap-2">
-                    <span className="text-red-700">✓</span>
-                    Expert restoration craftsmanship
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <span className="text-red-700">✓</span>
-                    Authentic vintage parts sourcing
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <span className="text-red-700">✓</span>
-                    Preserving agricultural history
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <span className="text-red-700">✓</span>
-                    Competitive pricing
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <span className="text-red-700">✓</span>
-                    Detailed progress updates
-                  </li>
-                </ul>
+                <Accordion type="single" collapsible className="w-full">
+                  <AccordionItem value="item-1">
+                    <AccordionTrigger>What's your turnaround time?</AccordionTrigger>
+                    <AccordionContent>
+                      Complete restorations typically take 3-6 months depending on the condition and scope of work. We provide regular progress updates throughout the process.
+                    </AccordionContent>
+                  </AccordionItem>
+                  <AccordionItem value="item-2">
+                    <AccordionTrigger>Do you work on all tractor brands?</AccordionTrigger>
+                    <AccordionContent>
+                      While we specialize in Farmall tractors, we have expertise with all major brands including John Deere, Ford, Allis-Chalmers, and International Harvester.
+                    </AccordionContent>
+                  </AccordionItem>
+                  <AccordionItem value="item-3">
+                    <AccordionTrigger>What's included in a full restoration?</AccordionTrigger>
+                    <AccordionContent>
+                      A complete restoration includes engine rebuild, bodywork and paint, electrical system, hydraulics, transmission service, new tires, and detailed finishing touches.
+                    </AccordionContent>
+                  </AccordionItem>
+                  <AccordionItem value="item-4">
+                    <AccordionTrigger>Can you source vintage parts?</AccordionTrigger>
+                    <AccordionContent>
+                      Yes! We have an extensive network of suppliers for authentic vintage parts. We prioritize original components whenever possible to maintain historical accuracy.
+                    </AccordionContent>
+                  </AccordionItem>
+                </Accordion>
               </CardContent>
             </Card>
           </div>

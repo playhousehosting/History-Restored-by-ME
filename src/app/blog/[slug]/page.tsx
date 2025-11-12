@@ -4,6 +4,8 @@ import { useQuery } from "convex/react"
 import { api } from "@convex/_generated/api"
 import { notFound, useParams } from "next/navigation"
 import { useEffect } from "react"
+import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb"
+import { Home } from "lucide-react"
 
 // Force dynamic rendering to prevent SSG/SSR issues with Convex
 export const dynamic = 'force-dynamic'
@@ -87,6 +89,24 @@ export default function BlogPostPage() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
       <article className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-16">
+        <Breadcrumb className="mb-8">
+          <BreadcrumbList>
+            <BreadcrumbItem>
+              <BreadcrumbLink href="/">
+                <Home className="h-4 w-4" />
+              </BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbSeparator />
+            <BreadcrumbItem>
+              <BreadcrumbLink href="/blog">Blog</BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbSeparator />
+            <BreadcrumbItem>
+              <BreadcrumbPage>{post.title}</BreadcrumbPage>
+            </BreadcrumbItem>
+          </BreadcrumbList>
+        </Breadcrumb>
+        
         {/* Featured Image */}
         {post.featuredImage && (
           <div className="mb-12 rounded-2xl overflow-hidden shadow-2xl">
