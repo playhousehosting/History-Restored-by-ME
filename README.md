@@ -1,211 +1,368 @@
-# History Restored by Me - Tractor Restoration Website
+<div align="center">
+  <img src="public/logo.png" alt="History Restored by ME Logo" width="600">
+  
+  # History Restored by ME
+  
+  **Professional Tractor Restoration Showcase**
+  
+  *Specializes in Farmall but Can Fix Them All*
+  
+  [![Next.js](https://img.shields.io/badge/Next.js-15-black?style=flat-square&logo=next.js)](https://nextjs.org/)
+  [![TypeScript](https://img.shields.io/badge/TypeScript-5-blue?style=flat-square&logo=typescript)](https://www.typescriptlang.org/)
+  [![Convex](https://img.shields.io/badge/Convex-Backend-orange?style=flat-square)](https://www.convex.dev/)
+  [![Vercel](https://img.shields.io/badge/Deployed%20on-Vercel-black?style=flat-square&logo=vercel)](https://vercel.com)
+</div>
 
-A professional showcase website for tractor restoration services built with Next.js, featuring a gallery, blog, authentication, and admin panel.
+---
 
-## Features
+## 🚜 About
 
-- 🚜 **Project Gallery**: Showcase restoration projects with multiple images
-- 📝 **Blog System**: Share restoration stories and techniques
-- 🔐 **Authentication**: User registration and login with NextAuth.js
-- 👤 **Admin Panel**: Manage projects and blog posts (admin users only)
-- 📸 **Image Upload**: Upload multiple images per project using UploadThing
-- 💾 **Neon Database**: PostgreSQL database with Prisma ORM
-- 🎨 **Responsive Design**: Mobile-friendly interface with Tailwind CSS
-- ⚡ **Vercel Ready**: Optimized for Vercel deployment
+A premium, Fortune 500-level website showcasing vintage tractor restoration services. Features luxury dark-themed design, AI-powered blog generation, and comprehensive project management.
 
-## Tech Stack
+## ✨ Features
 
-- **Framework**: Next.js 14+ (App Router)
-- **Language**: TypeScript
-- **Styling**: Tailwind CSS
-- **Database**: Neon PostgreSQL
-- **ORM**: Prisma
-- **Authentication**: NextAuth.js v5
-- **File Upload**: UploadThing
-- **Deployment**: Vercel
+### 🎨 **Luxury Design System**
+- Fortune 500-level dark theme with animated blobs and gradients
+- Glass morphism effects and smooth transitions
+- Fully responsive mobile-first design
+- Custom animations and hover effects
 
-## Prerequisites
+### 🚜 **Project Gallery**
+- Showcase restoration projects with multiple images
+- Featured project carousel on homepage
+- Detailed project pages with image galleries
+- Status tracking and categorization
+
+### 📝 **Advanced Blog System**
+- AI-powered blog post generation using Anthropic Claude
+- Rich text editor with markdown support
+- Featured images and excerpts
+- Scheduled publishing and draft management
+- SEO-optimized content
+
+### 🔐 **Authentication & Security**
+- Secure authentication with Convex Auth
+- Role-based access control (Admin/User)
+- Protected admin routes
+- Session management
+
+### 👤 **Admin Dashboard**
+- Comprehensive project management
+- Blog post creation and editing
+- AI blog generator with customizable tone
+- Contact form submissions management
+- User management system
+- Site settings configuration
+
+### 📸 **Image Management**
+- Multiple image uploads per project
+- UploadThing integration for reliable hosting
+- Automatic image optimization
+- Responsive image loading
+
+### 💬 **Contact System**
+- Contact form with validation
+- FAQ accordion section
+- Submission tracking and status management
+- Email integration ready
+
+## 🛠️ Tech Stack
+
+| Category | Technology |
+|----------|-----------|
+| **Framework** | Next.js 15 (App Router) |
+| **Language** | TypeScript |
+| **Styling** | Tailwind CSS v4 |
+| **Backend** | Convex (Realtime Database) |
+| **Authentication** | Convex Auth |
+| **AI Integration** | Anthropic Claude API |
+| **File Upload** | UploadThing |
+| **UI Components** | shadcn/ui |
+| **Icons** | Lucide React |
+| **Deployment** | Vercel |
+
+## 📋 Prerequisites
 
 - Node.js 18+ installed
-- A Neon database account (https://neon.tech)
-- An UploadThing account for image uploads (https://uploadthing.com)
+- A Convex account (https://convex.dev)
+- An UploadThing account (https://uploadthing.com)
+- Anthropic API key for AI blog generation (https://console.anthropic.com)
 
-## Getting Started
+## 🚀 Getting Started
 
-### 1. Install Dependencies
-
-Dependencies are already installed. If you need to reinstall:
+### 1. Clone and Install
 
 ```bash
+git clone https://github.com/yourusername/history-restored-by-me.git
+cd history-restored-by-me
 npm install
 ```
 
 ### 2. Configure Environment Variables
 
-Update your `.env` file with the following:
+Create a `.env.local` file in the root directory:
 
 ```env
-# Get your Neon database connection string from https://console.neon.tech
-DATABASE_URL="postgresql://username:password@host.neon.tech/database?sslmode=require"
+# Convex Backend
+CONVEX_DEPLOYMENT=your-deployment-url  # From Convex Dashboard
+NEXT_PUBLIC_CONVEX_URL=https://your-project.convex.cloud
 
-# Generate a secret key with: openssl rand -base64 32
-NEXTAUTH_URL="http://localhost:3000"
-NEXTAUTH_SECRET="your-generated-secret-key-here"
+# UploadThing (Image Uploads)
+UPLOADTHING_TOKEN=your_uploadthing_token
 
-# Get your UploadThing token from https://uploadthing.com/dashboard
-UPLOADTHING_TOKEN="your-uploadthing-token"
+# Anthropic API (AI Blog Generation)
+ANTHROPIC_API_KEY=your_anthropic_api_key
 ```
 
-### 3. Set Up Database
+### 3. Set Up Convex Backend
 
 ```bash
-# Generate Prisma Client
-npx prisma generate
+# Install Convex CLI globally
+npm install -g convex
 
-# Push the schema to your database
-npx prisma db push
+# Initialize Convex (follow prompts)
+npx convex dev
 
-# (Optional) Open Prisma Studio to view/manage data
-npx prisma studio
+# This will:
+# - Create a new Convex project (or link to existing)
+# - Set up your database schema
+# - Start the development server
 ```
 
 ### 4. Create Admin User
 
-You'll need to create your first admin user. You can do this in two ways:
-
-**Option A: Using Prisma Studio**
+1. Start the development server:
 ```bash
-npx prisma studio
+npm run dev
 ```
-1. Open User model
-2. Create a new user with `role: "admin"`
-3. Use a hashed password (you can generate one using the register page first, then update the role)
 
-**Option B: Register then Update**
-1. Start the dev server: `npm run dev`
-2. Go to http://localhost:3000/auth/register
-3. Create an account
-4. Use Prisma Studio to change the user's `role` to `"admin"`
+2. Navigate to `http://localhost:3000/auth/register`
+3. Create your first account
+4. Open Convex Dashboard (https://dashboard.convex.dev)
+5. Go to your project → Data → `users` table
+6. Find your user and edit the `role` field to `"admin"`
 
-### 5. Run Development Server
+### 5. Configure AI Blog Generation
+
+1. Get your Anthropic API key from https://console.anthropic.com
+2. Add it to your `.env.local` file
+3. The AI blog generator will be available in the admin panel
+
+### 6. Run Development Server
 
 ```bash
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) in your browser.
+Open [http://localhost:3000](http://localhost:3000) to see your site!
 
-## Project Structure
+## 📁 Project Structure
 
 ```
-src/
-├── app/
-│   ├── admin/              # Admin dashboard pages
-│   ├── api/                # API routes
-│   │   ├── auth/           # Authentication endpoints
-│   │   └── uploadthing/    # File upload endpoints
-│   ├── auth/               # Auth pages (signin, register)
-│   ├── blog/               # Blog listing and post pages
-│   ├── gallery/            # Project gallery and detail pages
-│   ├── layout.tsx          # Root layout with Header/Footer
-│   └── page.tsx            # Homepage
-├── components/             # React components
-│   ├── Header.tsx
-│   └── Footer.tsx
-├── lib/                    # Utility files
-│   ├── auth.ts            # NextAuth configuration
-│   ├── prisma.ts          # Prisma client instance
-│   └── uploadthing.ts     # UploadThing helpers
-└── types/                  # TypeScript type definitions
-
-prisma/
-└── schema.prisma          # Database schema
+├── convex/                     # Convex backend
+│   ├── schema.ts              # Database schema
+│   ├── auth.ts                # Authentication logic
+│   ├── projects.ts            # Project CRUD operations
+│   ├── blogPosts.ts           # Blog post operations
+│   ├── aiBlogGeneration.ts    # AI blog generation
+│   ├── contactSubmissions.ts  # Contact form handling
+│   └── users.ts               # User management
+├── src/
+│   ├── app/
+│   │   ├── admin/             # Admin dashboard (protected)
+│   │   ├── api/uploadthing/   # File upload endpoint
+│   │   ├── auth/              # Authentication pages
+│   │   │   ├── signin/        # Sign-in page
+│   │   │   └── register/      # Registration page
+│   │   ├── blog/              # Blog pages
+│   │   │   ├── page.tsx       # Blog listing
+│   │   │   └── [slug]/        # Individual blog post
+│   │   ├── contact/           # Contact page with form
+│   │   ├── gallery/           # Project gallery
+│   │   │   ├── page.tsx       # Gallery grid
+│   │   │   └── [id]/          # Project details
+│   │   ├── globals.css        # Global styles & animations
+│   │   ├── layout.tsx         # Root layout (Header/Footer)
+│   │   └── page.tsx           # Homepage
+│   └── components/
+│       ├── admin/             # Admin-specific components
+│       │   ├── AIBlogGenerator.tsx
+│       │   ├── BlogForm.tsx
+│       │   ├── ProjectForm.tsx
+│       │   └── SiteSettings.tsx
+│       ├── ui/                # shadcn/ui components
+│       ├── ConvexClientProvider.tsx
+│       ├── Header.tsx
+│       └── Footer.tsx
+└── public/
+    └── logo.png               # Site logo
 ```
 
-## Database Schema
+## 🗄️ Database Schema (Convex)
 
-The application includes the following models:
+### Collections
 
-- **User**: User accounts with authentication
-- **Project**: Restoration projects with images
-- **BlogPost**: Blog articles with markdown support
-- **Image**: Image storage for projects and blog posts
-- **Account/Session**: NextAuth.js session management
+- **users**: User accounts with authentication and roles
+- **projects**: Restoration project showcases
+- **blogPosts**: Blog articles with AI generation support
+- **contactSubmissions**: Contact form submissions
+- **siteSettings**: Global site configuration
+- **scheduledPosts**: Scheduled blog post publications
 
-## Deployment to Vercel
+## 🚢 Deployment
 
-### 1. Push to GitHub
+### Deploy to Vercel
 
+1. **Push to GitHub**
 ```bash
 git add .
-git commit -m "Initial commit"
-git branch -M main
-git remote add origin https://github.com/yourusername/your-repo.git
-git push -u origin main
+git commit -m "Deploy to production"
+git push origin main
 ```
 
-### 2. Deploy to Vercel
+2. **Connect to Vercel**
+   - Go to [vercel.com](https://vercel.com)
+   - Import your GitHub repository
+   - Vercel will auto-detect Next.js
 
-1. Go to [vercel.com](https://vercel.com) and sign in
-2. Click "Add New Project"
-3. Import your GitHub repository
-4. Configure environment variables:
-   - `DATABASE_URL` (your Neon database URL)
-   - `NEXTAUTH_URL` (your Vercel deployment URL, e.g., `https://your-site.vercel.app`)
-   - `NEXTAUTH_SECRET` (same secret from local development)
-   - `UPLOADTHING_TOKEN` (your UploadThing token)
-5. Click "Deploy"
+3. **Configure Environment Variables**
 
-### 3. Update Admin User
+Add these in Vercel's Project Settings → Environment Variables:
 
-After deployment, use Prisma Studio or database console to set a user's role to "admin".
+```env
+CONVEX_DEPLOYMENT=prod:your-deployment
+NEXT_PUBLIC_CONVEX_URL=https://your-project.convex.cloud
+UPLOADTHING_TOKEN=your_token
+ANTHROPIC_API_KEY=your_key
+```
 
-## Features Guide
+4. **Deploy Convex to Production**
+```bash
+npx convex deploy
+```
 
-### Adding Projects (Admin Only)
+5. **Update Convex Site URL**
+   - Go to Convex Dashboard → Settings
+   - Set Site URL to your Vercel domain (e.g., `https://your-site.vercel.app`)
 
-1. Sign in as admin
-2. Navigate to `/admin`
-3. Click "Manage Projects"
-4. Add project details and upload images
-5. Mark as "featured" to display on homepage
+### Production Checklist
 
-### Writing Blog Posts (Admin Only)
+- [ ] Environment variables configured
+- [ ] Convex deployed to production
+- [ ] Admin user created
+- [ ] Site URL updated in Convex
+- [ ] DNS configured (if custom domain)
+- [ ] SSL certificate active
 
-1. Navigate to `/admin/blog`
-2. Create new post with title and content (supports Markdown)
-3. Add optional excerpt for preview
-4. Publish when ready
+## 📚 Usage Guide
 
-## Environment Variables Reference
+### Admin Dashboard (`/admin`)
 
-| Variable | Description | Example |
-|----------|-------------|---------|
-| `DATABASE_URL` | Neon PostgreSQL connection string | `postgresql://user:pass@host.neon.tech/db` |
-| `NEXTAUTH_URL` | Base URL of your application | `http://localhost:3000` or `https://yoursite.com` |
-| `NEXTAUTH_SECRET` | Random secret for JWT encryption | Generate with `openssl rand -base64 32` |
-| `UPLOADTHING_TOKEN` | UploadThing API token | Get from uploadthing.com dashboard |
+The admin panel includes 7 tabs for complete site management:
 
-## Troubleshooting
+1. **Projects** - Create and manage restoration project showcases
+2. **Blog** - Write and publish blog posts
+3. **AI Generator** - Generate SEO-optimized blog posts with AI
+4. **Drafts** - Review and edit AI-generated or unpublished posts
+5. **Contacts** - View and manage contact form submissions
+6. **Users** - Manage user accounts and permissions
+7. **Settings** - Configure site-wide settings
 
-### Database Connection Issues
+### Creating Projects
 
-- Verify your `DATABASE_URL` is correct
-- Ensure your Neon database is active
-- Check that SSL mode is enabled (`sslmode=require`)
+1. Navigate to `/admin` → **Projects** tab
+2. Click "New Project"
+3. Fill in project details:
+   - Title and description
+   - Status (In Progress/Completed)
+   - Upload multiple images
+   - Mark as "Featured" for homepage carousel
+4. Save and publish
+
+### AI Blog Generation
+
+1. Go to `/admin` → **AI Generator** tab
+2. Enter your topic (e.g., "1950 Ford 8N Tractor")
+3. Add optional SEO keywords
+4. Choose tone: Professional, Enthusiast, Technical, or Casual
+5. Generate - AI creates 1200-1800 word article
+6. Review in **Drafts** tab
+7. Edit if needed and publish
+
+### Managing Contact Submissions
+
+1. Navigate to `/admin` → **Contacts** tab
+2. View all submissions with status indicators
+3. Mark as Read or Responded
+4. Delete processed submissions
+
+## 🔐 Environment Variables Reference
+
+| Variable | Required | Description | Where to Get |
+|----------|----------|-------------|--------------|
+| `CONVEX_DEPLOYMENT` | Yes | Convex deployment URL | Convex Dashboard |
+| `NEXT_PUBLIC_CONVEX_URL` | Yes | Public Convex endpoint | Convex Dashboard → Settings |
+| `UPLOADTHING_TOKEN` | Yes | Image upload API token | uploadthing.com/dashboard |
+| `ANTHROPIC_API_KEY` | Optional | For AI blog generation | console.anthropic.com |
+
+## 🐛 Troubleshooting
+
+### Convex Connection Issues
+```bash
+# Check if Convex is running
+npx convex dev
+
+# Verify environment variables
+echo $NEXT_PUBLIC_CONVEX_URL
+```
 
 ### Authentication Not Working
-
-- Verify `NEXTAUTH_SECRET` is set
-- Check `NEXTAUTH_URL` matches your domain
-- Clear browser cookies and try again
+- Clear browser cookies and localStorage
+- Verify user has `role: "admin"` in Convex Dashboard
+- Check Convex Auth configuration in `convex/auth.config.ts`
 
 ### Image Upload Failing
-
 - Confirm `UPLOADTHING_TOKEN` is valid
 - Check UploadThing dashboard for quota limits
-- Verify file size is under 4MB
+- Verify file size is under the limit (default 4MB)
 
-## License
+### AI Blog Generation Errors
+- Ensure `ANTHROPIC_API_KEY` is set correctly
+- Check API key has sufficient credits
+- Verify Anthropic API is accessible from your region
 
-MIT
+### Build Errors
+```bash
+# Clear Next.js cache
+rm -rf .next
+
+# Reinstall dependencies
+rm -rf node_modules package-lock.json
+npm install
+
+# Rebuild
+npm run build
+```
+
+## 🤝 Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+## 📄 License
+
+MIT License - feel free to use this project for your own tractor restoration business!
+
+## 🔗 Links
+
+- **Live Site**: [https://www.historyrestoredbyme.com](https://www.historyrestoredbyme.com)
+- **Convex**: [convex.dev](https://convex.dev)
+- **Next.js**: [nextjs.org](https://nextjs.org)
+- **UploadThing**: [uploadthing.com](https://uploadthing.com)
+
+---
+
+<div align="center">
+  <strong>Built with ❤️ for vintage tractor enthusiasts</strong>
+  <br>
+  <sub>Specializes in Farmall but Can Fix Them All</sub>
+</div>
