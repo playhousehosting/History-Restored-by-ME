@@ -41,52 +41,80 @@ export const generateBlogPost = action({
     });
 
     // Create the prompt for Claude
-    const prompt = `You are an expert content writer specializing in vintage tractors, agricultural machinery, and equipment restoration. 
+    const prompt = `You are an expert content writer specializing in vintage tractors, agricultural machinery, and equipment restoration. Create a professional, magazine-quality blog post.
 
 Write a comprehensive, SEO-optimized blog post about: "${topic}"
 
-Requirements:
-- Length: 1200-1800 words
+CONTENT REQUIREMENTS:
+- Length: 1500-2000 words (comprehensive and detailed)
 - Tone: ${tone}
 - Include specific technical details, history, and restoration insights
-- Use H2 and H3 headings to structure the content
-- Include a compelling introduction and conclusion
+- Create engaging narrative that captivates readers
 - Natural keyword integration: ${keywords || topic}
-- Make it engaging for both restoration enthusiasts and general audiences
 - Include maintenance tips, historical context, and collector value insights
-- Use specific model numbers, years, and technical specifications when relevant
+- Use specific model numbers, years, and technical specifications
+- Add expert insights and practical advice
+- Include troubleshooting tips where relevant
 
-Additional keywords to naturally incorporate: ${keywords}
+STRUCTURE REQUIREMENTS:
+1. Opening Hook (2-3 paragraphs): Compelling introduction that draws readers in
+2. 5-7 Main Sections with H2 headings (Historical Context, Technical Specs, Design Features, Restoration Guide, Maintenance Tips, Collector Value, etc.)
+3. Each main section should have 2-4 subsections with H3 headings
+4. Practical lists for specifications, tips, and procedures
+5. Strong conclusion that summarizes key points
 
-CRITICAL FORMATTING RULES:
-1. Each paragraph MUST be wrapped in <p> tags with proper spacing
-2. Add blank lines between all sections for readability
-3. Use <h2> for main sections (with proper spacing before and after)
-4. Use <h3> for subsections (with proper spacing before and after)
-5. Use <ul> and <li> for lists (with proper spacing)
-6. Use <strong> for emphasis and <em> for subtle emphasis
-7. Ensure proper line breaks between paragraphs
-8. Do NOT include <html>, <head>, or <body> tags
-9. Do NOT use <br> tags - use proper paragraph spacing instead
-10. Each major section should be clearly separated with blank lines
+HTML FORMATTING RULES (STRICTLY FOLLOW):
+1. Use <p></p> tags for EVERY paragraph - no exceptions
+2. Use <h2></h2> for main section titles
+3. Use <h3></h3> for subsections
+4. Use <ul><li></li></ul> for bulleted lists
+5. Use <ol><li></li></ul> for numbered lists
+6. Use <strong></strong> for important terms and emphasis
+7. Use <em></em> for subtle emphasis or technical terms
+8. Use <blockquote></blockquote> for quotes or key insights
 
-Example structure:
-<p>Opening paragraph with hook...</p>
+SPACING RULES:
+- Leave blank line after each closing tag
+- Separate sections with double line breaks
+- Each paragraph should be standalone with proper tags
+- Lists must be properly formatted with ul/ol tags
 
-<h2>Main Section Title</h2>
-<p>Introduction to this section...</p>
+EXAMPLE STRUCTURE:
+<p>Opening paragraph that hooks the reader with interesting facts...</p>
 
-<p>Another paragraph with details...</p>
+<p>Second paragraph expanding on the hook...</p>
 
-<h3>Subsection Title</h3>
-<p>Subsection content...</p>
+<h2>Historical Development</h2>
+
+<p>First paragraph of this section...</p>
+
+<p>Second paragraph with more details...</p>
+
+<h3>Key Innovations</h3>
+
+<p>Explanation of innovations...</p>
 
 <ul>
-<li>List item one</li>
-<li>List item two</li>
+<li>First innovation point</li>
+<li>Second innovation point</li>
+<li>Third innovation point</li>
 </ul>
 
-Start with a compelling opening paragraph that hooks the reader, then provide detailed sections with clear headings and proper spacing throughout.`;
+<h2>Technical Specifications</h2>
+
+<p>Overview of technical details...</p>
+
+<h3>Engine and Performance</h3>
+
+<p>Detailed engine information...</p>
+
+<ul>
+<li><strong>Engine Type:</strong> Details here</li>
+<li><strong>Horsepower:</strong> Details here</li>
+<li><strong>Displacement:</strong> Details here</li>
+</ul>
+
+Continue with comprehensive sections covering restoration, maintenance, collector value, and practical tips. End with a strong conclusion.`;
 
     try {
       // Call Claude Haiku 4.5 API
