@@ -16,6 +16,7 @@ import { toast } from "sonner"
 import { ProjectForm } from "@/components/admin/ProjectForm"
 import { BlogForm } from "@/components/admin/BlogForm"
 import { AIBlogGenerator } from "@/components/admin/AIBlogGenerator"
+import { UserForm } from "@/components/admin/UserForm"
 import SiteSettings from "@/components/admin/SiteSettings"
 import type { Id } from "@convex/_generated/dataModel"
 
@@ -29,6 +30,7 @@ export default function AdminPage() {
   const authActions = useAuthActions();
   const [showProjectForm, setShowProjectForm] = useState(false);
   const [showBlogForm, setShowBlogForm] = useState(false);
+  const [showUserForm, setShowUserForm] = useState(false);
   const [editingProject, setEditingProject] = useState<any>(null);
   const [editingBlog, setEditingBlog] = useState<any>(null);
 
@@ -597,7 +599,7 @@ export default function AdminPage() {
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
             <h2 className="text-xl md:text-2xl font-bold text-red-700">User Management</h2>
             <Button
-              onClick={() => router.push("/auth/register")}
+              onClick={() => setShowUserForm(true)}
               className="bg-red-700 hover:bg-red-800 w-full sm:w-auto"
             >
               <Plus className="h-4 w-4 mr-2" />
@@ -694,6 +696,14 @@ export default function AdminPage() {
           }}
         />
       )}
+
+      <UserForm
+        isOpen={showUserForm}
+        onClose={() => setShowUserForm(false)}
+        onSuccess={() => {
+          // Users list will automatically refresh via Convex reactivity
+        }}
+      />
     </div>
   )
 }
