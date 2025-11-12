@@ -52,16 +52,41 @@ Requirements:
 - Use H2 and H3 headings to structure the content
 - Include a compelling introduction and conclusion
 - Natural keyword integration: ${keywords || topic}
-- Write in HTML format with proper heading tags, paragraphs, and lists
 - Make it engaging for both restoration enthusiasts and general audiences
 - Include maintenance tips, historical context, and collector value insights
 - Use specific model numbers, years, and technical specifications when relevant
 
 Additional keywords to naturally incorporate: ${keywords}
 
-Format your response as valid HTML that can be directly inserted into a blog post. Use <h2>, <h3>, <p>, <ul>, <li>, <strong>, <em> tags as needed. Do NOT include <html>, <head>, or <body> tags - just the article content.
+CRITICAL FORMATTING RULES:
+1. Each paragraph MUST be wrapped in <p> tags with proper spacing
+2. Add blank lines between all sections for readability
+3. Use <h2> for main sections (with proper spacing before and after)
+4. Use <h3> for subsections (with proper spacing before and after)
+5. Use <ul> and <li> for lists (with proper spacing)
+6. Use <strong> for emphasis and <em> for subtle emphasis
+7. Ensure proper line breaks between paragraphs
+8. Do NOT include <html>, <head>, or <body> tags
+9. Do NOT use <br> tags - use proper paragraph spacing instead
+10. Each major section should be clearly separated with blank lines
 
-Start with a compelling opening paragraph that hooks the reader, then provide detailed sections with clear headings.`;
+Example structure:
+<p>Opening paragraph with hook...</p>
+
+<h2>Main Section Title</h2>
+<p>Introduction to this section...</p>
+
+<p>Another paragraph with details...</p>
+
+<h3>Subsection Title</h3>
+<p>Subsection content...</p>
+
+<ul>
+<li>List item one</li>
+<li>List item two</li>
+</ul>
+
+Start with a compelling opening paragraph that hooks the reader, then provide detailed sections with clear headings and proper spacing throughout.`;
 
     try {
       // Call Claude Haiku 4.5 API
