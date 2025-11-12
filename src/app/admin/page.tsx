@@ -52,21 +52,25 @@ export default function AdminPage() {
   // Handle loading state
   if (!authActions || !authActions.signOut) {
     return (
-      <div className="container mx-auto px-4 py-8">
-        <div className="h-8 bg-gray-200 animate-pulse rounded mb-4 w-48"></div>
-        <div className="h-64 bg-gray-200 animate-pulse rounded"></div>
+      <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-red-950">
+        <div className="container mx-auto px-4 py-8">
+          <div className="h-8 bg-slate-700/50 animate-pulse rounded mb-4 w-48"></div>
+          <div className="h-64 bg-slate-700/50 animate-pulse rounded"></div>
+        </div>
       </div>
     )
   }
 
   if (projects === undefined || blogPosts === undefined || contactSubmissions === undefined) {
     return (
-      <div className="container mx-auto px-4 py-8">
-        <Skeleton className="h-12 w-64 mb-8" />
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {[...Array(6)].map((_, i) => (
-            <Skeleton key={i} className="h-64" />
-          ))}
+      <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-red-950">
+        <div className="container mx-auto px-4 py-8">
+          <Skeleton className="h-12 w-64 mb-8 bg-slate-700/50" />
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {[...Array(6)].map((_, i) => (
+              <Skeleton key={i} className="h-64 bg-slate-700/50" />
+            ))}
+          </div>
         </div>
       </div>
     )
@@ -97,13 +101,27 @@ export default function AdminPage() {
 
 
   return (
-    <div className="container mx-auto px-4 py-4 md:py-8">
-      <div className="flex justify-between items-center mb-6 md:mb-8">
-        <h1 className="text-2xl md:text-4xl font-bold text-gray-900">Admin Dashboard</h1>
+    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-red-950">
+      {/* Animated Background Blobs */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-red-500/20 rounded-full blur-3xl animate-blob"></div>
+        <div className="absolute top-1/3 right-1/4 w-96 h-96 bg-blue-500/20 rounded-full blur-3xl animate-blob animation-delay-2000"></div>
+        <div className="absolute bottom-1/4 left-1/3 w-96 h-96 bg-purple-500/20 rounded-full blur-3xl animate-blob animation-delay-4000"></div>
       </div>
 
-      <Tabs defaultValue="projects" className="space-y-6">
-        <TabsList className="grid w-full grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7 gap-1">
+      <div className="relative container mx-auto px-4 py-6 md:py-12">
+        <div className="text-center mb-8 md:mb-12">
+          <Badge className="mb-4 px-6 py-2 bg-red-600/10 text-red-400 border-red-600/20 backdrop-blur-sm">
+            <Sparkles className="w-4 h-4 mr-2" />
+            Admin Portal
+          </Badge>
+          <h1 className="text-4xl md:text-6xl font-bold bg-gradient-to-r from-white via-gray-100 to-gray-300 bg-clip-text text-transparent">
+            Admin Dashboard
+          </h1>
+        </div>
+
+        <Tabs defaultValue="projects" className="space-y-6">
+          <TabsList className="grid w-full grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7 gap-1 bg-white/5 backdrop-blur-sm border-slate-700">
           <TabsTrigger value="projects" className="flex items-center gap-1 md:gap-2 text-xs md:text-sm">
             <ImageIcon className="h-3 w-3 md:h-4 md:w-4" />
             <span className="hidden sm:inline">Projects</span>
@@ -140,13 +158,13 @@ export default function AdminPage() {
 
         <TabsContent value="projects" className="space-y-6">
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-            <h2 className="text-xl md:text-2xl font-bold text-red-700">Manage Projects</h2>
+            <h2 className="text-xl md:text-2xl font-bold text-white">Manage Projects</h2>
             <Button
               onClick={() => {
                 setEditingProject(null)
                 setShowProjectForm(true)
               }}
-              className="bg-red-700 hover:bg-red-800 w-full sm:w-auto"
+              className="bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all w-full sm:w-auto"
             >
               <Plus className="h-4 w-4 mr-2" />
               New Project
@@ -154,7 +172,7 @@ export default function AdminPage() {
           </div>
 
           {projects.length === 0 ? (
-            <Alert>
+            <Alert className="border-slate-700 bg-white/5 backdrop-blur-sm text-gray-300">
               <AlertDescription>
                 No projects yet. Create your first restoration project to showcase your work!
               </AlertDescription>
@@ -162,7 +180,7 @@ export default function AdminPage() {
           ) : (
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
               {projects.map((project) => (
-                <Card key={project._id} className="overflow-hidden">
+                <Card key={project._id} className="border-none bg-white/5 backdrop-blur-sm shadow-xl hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 overflow-hidden">
                   <div className="relative h-48 bg-gray-200">
                     {project.images?.[0] ? (
                       <img
@@ -182,15 +200,15 @@ export default function AdminPage() {
                     )}
                   </div>
                   <CardHeader>
-                    <CardTitle className="line-clamp-1">{project.title}</CardTitle>
-                    <CardDescription className="line-clamp-2">
+                    <CardTitle className="line-clamp-1 text-white">{project.title}</CardTitle>
+                    <CardDescription className="line-clamp-2 text-gray-400">
                       {project.description}
                     </CardDescription>
                   </CardHeader>
                   <CardContent>
                     <div className="flex items-center gap-2 mb-4">
-                      <Badge variant="outline">{project.status}</Badge>
-                      <Badge variant="outline">
+                      <Badge className="bg-green-600/20 text-green-400 border-green-600/30">{project.status}</Badge>
+                      <Badge className="bg-blue-600/20 text-blue-400 border-blue-600/30">
                         {project.images?.length || 0} images
                       </Badge>
                     </div>
@@ -199,10 +217,10 @@ export default function AdminPage() {
                         size="sm"
                         variant="outline"
                         onClick={() => router.push(`/gallery/${project._id}`)}
-                        className="w-full sm:w-auto justify-start sm:justify-center"
+                        className="w-full sm:w-auto justify-start sm:justify-center bg-white/5 border-slate-700 text-white hover:bg-white/10"
                       >
                         <Eye className="h-4 w-4 mr-2" />
-                        <span>View Project</span>
+                        <span>View</span>
                       </Button>
                       <Button
                         size="sm"
@@ -211,7 +229,7 @@ export default function AdminPage() {
                           setEditingProject(project)
                           setShowProjectForm(true)
                         }}
-                        className="w-full sm:w-auto justify-start sm:justify-center"
+                        className="w-full sm:w-auto justify-start sm:justify-center bg-white/5 border-slate-700 text-white hover:bg-white/10"
                       >
                         <Edit className="h-4 w-4 mr-2" />
                         <span>Edit</span>
@@ -220,7 +238,7 @@ export default function AdminPage() {
                         size="sm"
                         variant="destructive"
                         onClick={() => deleteProject(project._id)}
-                        className="w-full sm:w-auto justify-start sm:justify-center"
+                        className="w-full sm:w-auto justify-start sm:justify-center bg-red-600/20 border-red-600/30 text-red-400 hover:bg-red-600/30"
                       >
                         <Trash2 className="h-4 w-4 mr-2" />
                         <span>Delete</span>
@@ -235,13 +253,13 @@ export default function AdminPage() {
 
         <TabsContent value="blog" className="space-y-6">
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-            <h2 className="text-xl md:text-2xl font-bold text-red-700">Manage Blog Posts</h2>
+            <h2 className="text-xl md:text-2xl font-bold text-white">Manage Blog Posts</h2>
             <Button
               onClick={() => {
                 setEditingBlog(null)
                 setShowBlogForm(true)
               }}
-              className="bg-red-700 hover:bg-red-800 w-full sm:w-auto"
+              className="bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all w-full sm:w-auto"
             >
               <Plus className="h-4 w-4 mr-2" />
               New Post
@@ -249,7 +267,7 @@ export default function AdminPage() {
           </div>
 
           {blogPosts.length === 0 ? (
-            <Alert>
+            <Alert className="border-slate-700 bg-white/5 backdrop-blur-sm text-gray-300">
               <AlertDescription>
                 No blog posts yet. Share your restoration stories and expertise!
               </AlertDescription>
@@ -257,19 +275,19 @@ export default function AdminPage() {
           ) : (
             <div className="space-y-4">
               {blogPosts.map((post) => (
-                <Card key={post._id}>
+                <Card key={post._id} className="border-none bg-white/5 backdrop-blur-sm shadow-xl hover:shadow-2xl transition">
                   <CardHeader>
                     <div className="flex justify-between items-start">
                       <div className="flex-1">
-                        <CardTitle className="flex items-center gap-2">
+                        <CardTitle className="flex items-center gap-2 text-white">
                           {post.title}
                           {post.published ? (
-                            <Badge className="bg-green-600">Published</Badge>
+                            <Badge className="bg-green-600/20 text-green-400 border-green-600/30">Published</Badge>
                           ) : (
-                            <Badge variant="outline">Draft</Badge>
+                            <Badge className="bg-gray-600/20 text-gray-400 border-gray-600/30">Draft</Badge>
                           )}
                         </CardTitle>
-                        <CardDescription className="mt-2">
+                        <CardDescription className="mt-2 text-gray-400">
                           {post.excerpt}
                         </CardDescription>
                       </div>
@@ -281,7 +299,7 @@ export default function AdminPage() {
                         size="sm"
                         variant="outline"
                         onClick={() => router.push(`/blog/${post.slug}`)}
-                        className="w-full sm:w-auto justify-start sm:justify-center"
+                        className="w-full sm:w-auto justify-start sm:justify-center bg-white/5 border-slate-700 text-white hover:bg-white/10"
                       >
                         <Eye className="h-4 w-4 mr-2" />
                         View Post
@@ -293,7 +311,7 @@ export default function AdminPage() {
                           setEditingBlog(post)
                           setShowBlogForm(true)
                         }}
-                        className="w-full sm:w-auto justify-start sm:justify-center"
+                        className="w-full sm:w-auto justify-start sm:justify-center bg-white/5 border-slate-700 text-white hover:bg-white/10"
                       >
                         <Edit className="h-4 w-4 mr-2" />
                         Edit Post
@@ -302,7 +320,7 @@ export default function AdminPage() {
                         size="sm"
                         variant="destructive"
                         onClick={() => deleteBlogPost(post._id)}
-                        className="w-full sm:w-auto justify-start sm:justify-center"
+                        className="w-full sm:w-auto justify-start sm:justify-center bg-red-600/20 border-red-600/30 text-red-400 hover:bg-red-600/30"
                       >
                         <Trash2 className="h-4 w-4 mr-2" />
                         Delete
@@ -318,8 +336,8 @@ export default function AdminPage() {
         <TabsContent value="ai-generator" className="space-y-6">
           <div className="flex justify-between items-center mb-4">
             <div>
-              <h2 className="text-xl md:text-2xl font-bold text-red-700">AI Blog Post Generator</h2>
-              <p className="text-sm md:text-base text-gray-600 mt-1">Generate comprehensive, SEO-optimized blog posts about tractors and machinery</p>
+              <h2 className="text-xl md:text-2xl font-bold text-white">AI Blog Post Generator</h2>
+              <p className="text-sm md:text-base text-gray-400 mt-1">Generate comprehensive, SEO-optimized blog posts about tractors and machinery</p>
             </div>
           </div>
 
@@ -328,38 +346,38 @@ export default function AdminPage() {
             toast.success("Check the Drafts tab to review your AI-generated post!")
           }} />
 
-          <div className="border-t pt-6 mt-6">
-            <h3 className="font-semibold text-lg mb-3">How It Works</h3>
+          <div className="border-t border-slate-800 pt-6 mt-6">
+            <h3 className="font-semibold text-lg mb-3 text-white">How It Works</h3>
             <div className="grid md:grid-cols-2 gap-4">
-              <Card>
+              <Card className="border-none bg-white/5 backdrop-blur-sm">
                 <CardHeader>
-                  <CardTitle className="text-base">1. Enter Your Topic</CardTitle>
+                  <CardTitle className="text-base text-white">1. Enter Your Topic</CardTitle>
                 </CardHeader>
-                <CardContent className="text-sm text-gray-600">
+                <CardContent className="text-sm text-gray-400">
                   Type in the specific tractor model or machinery you want to write about. Be specific - include make, model, and year if possible.
                 </CardContent>
               </Card>
-              <Card>
+              <Card className="border-none bg-white/5 backdrop-blur-sm">
                 <CardHeader>
-                  <CardTitle className="text-base">2. Add Keywords (Optional)</CardTitle>
+                  <CardTitle className="text-base text-white">2. Add Keywords (Optional)</CardTitle>
                 </CardHeader>
-                <CardContent className="text-sm text-gray-600">
+                <CardContent className="text-sm text-gray-400">
                   Include any specific terms you want in the article like "restoration", "vintage", or "collector value" to improve SEO.
                 </CardContent>
               </Card>
-              <Card>
+              <Card className="border-none bg-white/5 backdrop-blur-sm">
                 <CardHeader>
-                  <CardTitle className="text-base">3. Choose Tone</CardTitle>
+                  <CardTitle className="text-base text-white">3. Choose Tone</CardTitle>
                 </CardHeader>
-                <CardContent className="text-sm text-gray-600">
+                <CardContent className="text-sm text-gray-400">
                   Select the writing style: Professional for authority, Enthusiast for passion, Technical for specs, or Casual for friendliness.
                 </CardContent>
               </Card>
-              <Card>
+              <Card className="border-none bg-white/5 backdrop-blur-sm">
                 <CardHeader>
-                  <CardTitle className="text-base">4. Review & Publish</CardTitle>
+                  <CardTitle className="text-base text-white">4. Review & Publish</CardTitle>
                 </CardHeader>
-                <CardContent className="text-sm text-gray-600">
+                <CardContent className="text-sm text-gray-400">
                   The AI generates a 1200-1800 word article saved as a draft. Review it in the Drafts tab, edit if needed, then publish!
                 </CardContent>
               </Card>
@@ -370,16 +388,16 @@ export default function AdminPage() {
         <TabsContent value="drafts" className="space-y-6">
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
             <div>
-              <h2 className="text-xl md:text-2xl font-bold text-red-700">Draft Blog Posts</h2>
-              <p className="text-sm md:text-base text-gray-600 mt-1">Review AI-generated drafts and unpublished posts</p>
+              <h2 className="text-xl md:text-2xl font-bold text-white">Draft Blog Posts</h2>
+              <p className="text-sm md:text-base text-gray-400 mt-1">Review AI-generated drafts and unpublished posts</p>
             </div>
-            <Badge variant="outline" className="text-sm md:text-lg px-2 md:px-3 py-1 whitespace-nowrap">
+            <Badge className="text-sm md:text-lg px-2 md:px-3 py-1 whitespace-nowrap bg-blue-600/20 text-blue-400 border-blue-600/30">
               {aiDrafts?.length || 0} AI Drafts
             </Badge>
           </div>
 
           {!draftPosts || draftPosts.length === 0 ? (
-            <Alert>
+            <Alert className="border-slate-700 bg-white/5 backdrop-blur-sm text-gray-300">
               <AlertDescription>
                 No drafts yet. Use the AI Generator to create blog posts automatically!
               </AlertDescription>
@@ -387,27 +405,27 @@ export default function AdminPage() {
           ) : (
             <div className="space-y-4">
               {draftPosts.map((post) => (
-                <Card key={post._id} className={post.aiGenerated ? "border-blue-200 bg-blue-50" : ""}>
+                <Card key={post._id} className={post.aiGenerated ? "border-none bg-blue-600/10 backdrop-blur-sm" : "border-none bg-white/5 backdrop-blur-sm"}>
                   <CardHeader>
                     <div className="flex justify-between items-start">
                       <div className="flex-1">
-                        <CardTitle className="flex items-center gap-2 flex-wrap">
+                        <CardTitle className="flex items-center gap-2 flex-wrap text-white">
                           {post.title}
-                          <Badge variant="outline">Draft</Badge>
+                          <Badge className="bg-gray-600/20 text-gray-400 border-gray-600/30">Draft</Badge>
                           {post.aiGenerated && (
-                            <Badge className="bg-blue-600">
+                            <Badge className="bg-blue-600/20 text-blue-400 border-blue-600/30">
                               <Sparkles className="h-3 w-3 mr-1" />
                               AI Generated
                             </Badge>
                           )}
                           {post.status === "scheduled" && post.scheduledPublishDate && (
-                            <Badge className="bg-purple-600">
+                            <Badge className="bg-purple-600/20 text-purple-400 border-purple-600/30">
                               <Calendar className="h-3 w-3 mr-1" />
                               Scheduled: {new Date(post.scheduledPublishDate).toLocaleDateString()}
                             </Badge>
                           )}
                         </CardTitle>
-                        <CardDescription className="mt-2">
+                        <CardDescription className="mt-2 text-gray-400">
                           {post.excerpt || "No excerpt"}
                         </CardDescription>
                         {post.aiGenerated && post.aiPrompt && (
@@ -432,14 +450,14 @@ export default function AdminPage() {
                           setEditingBlog(post)
                           setShowBlogForm(true)
                         }}
-                        className="w-full sm:w-auto justify-start sm:justify-center"
+                        className="w-full sm:w-auto justify-start sm:justify-center bg-white/5 border-slate-700 text-white hover:bg-white/10"
                       >
                         <Edit className="h-4 w-4 mr-2" />
                         Edit Draft
                       </Button>
                       <Button
                         size="sm"
-                        className="bg-green-600 hover:bg-green-700 w-full sm:w-auto justify-start sm:justify-center"
+                        className="bg-green-600/20 border-green-600/30 text-green-400 hover:bg-green-600/30 w-full sm:w-auto justify-start sm:justify-center"
                         onClick={async () => {
                           if (!confirm("Publish this post immediately?")) return
                           try {
@@ -477,7 +495,7 @@ export default function AdminPage() {
                             toast.error("Failed to delete draft")
                           }
                         }}
-                        className="w-full sm:w-auto justify-start sm:justify-center"
+                        className="w-full sm:w-auto justify-start sm:justify-center bg-red-600/20 border-red-600/30 text-red-400 hover:bg-red-600/30"
                       >
                         <Trash2 className="h-4 w-4 mr-2" />
                         Delete Draft
@@ -492,11 +510,11 @@ export default function AdminPage() {
 
         <TabsContent value="contacts" className="space-y-6">
           <div className="flex justify-between items-center">
-            <h2 className="text-xl md:text-2xl font-bold text-red-700">Contact Form Submissions</h2>
+            <h2 className="text-xl md:text-2xl font-bold text-white">Contact Form Submissions</h2>
           </div>
 
           {!contactSubmissions || contactSubmissions.length === 0 ? (
-            <Alert>
+            <Alert className="border-slate-700 bg-white/5 backdrop-blur-sm text-gray-300">
               <AlertDescription>
                 No contact submissions yet.
               </AlertDescription>
@@ -504,27 +522,27 @@ export default function AdminPage() {
           ) : (
             <div className="space-y-4">
               {contactSubmissions.map((submission: any) => (
-                <Card key={submission._id} className={submission.status === "new" ? "border-red-200 bg-red-50" : ""}>
+                <Card key={submission._id} className={submission.status === "new" ? "border-none bg-red-600/10 backdrop-blur-sm" : "border-none bg-white/5 backdrop-blur-sm"}>
                   <CardHeader>
                     <div className="flex justify-between items-start">
                       <div className="flex-1">
-                        <CardTitle className="flex items-center gap-2">
+                        <CardTitle className="flex items-center gap-2 text-white">
                           {submission.subject}
                           {submission.status === "new" && (
-                            <Badge className="bg-red-600">New</Badge>
+                            <Badge className="bg-red-600/20 text-red-400 border-red-600/30">New</Badge>
                           )}
                           {submission.status === "read" && (
-                            <Badge variant="outline">Read</Badge>
+                            <Badge className="bg-gray-600/20 text-gray-400 border-gray-600/30">Read</Badge>
                           )}
                           {submission.status === "responded" && (
-                            <Badge className="bg-green-600">Responded</Badge>
+                            <Badge className="bg-green-600/20 text-green-400 border-green-600/30">Responded</Badge>
                           )}
                         </CardTitle>
-                        <CardDescription className="mt-2">
+                        <CardDescription className="mt-2 text-gray-400">
                           <div className="space-y-1">
                             <p><strong>From:</strong> {submission.name}</p>
-                            <p><strong>Email:</strong> <a href={`mailto:${submission.email}`} className="text-red-700 hover:underline">{submission.email}</a></p>
-                            {submission.phone && <p><strong>Phone:</strong> <a href={`tel:${submission.phone}`} className="text-red-700 hover:underline">{submission.phone}</a></p>}
+                            <p><strong>Email:</strong> <a href={`mailto:${submission.email}`} className="text-red-400 hover:text-red-300 transition">{submission.email}</a></p>
+                            {submission.phone && <p><strong>Phone:</strong> <a href={`tel:${submission.phone}`} className="text-red-400 hover:text-red-300 transition">{submission.phone}</a></p>}
                             <p><strong>Date:</strong> {new Date(submission.createdAt).toLocaleString()}</p>
                           </div>
                         </CardDescription>
@@ -532,8 +550,8 @@ export default function AdminPage() {
                     </div>
                   </CardHeader>
                   <CardContent>
-                    <div className="mb-4 p-4 bg-gray-50 rounded-lg border">
-                      <p className="text-sm whitespace-pre-wrap">{submission.message}</p>
+                    <div className="mb-4 p-4 bg-white/5 rounded-lg border border-slate-800">
+                      <p className="text-sm whitespace-pre-wrap text-gray-300">{submission.message}</p>
                     </div>
                     <div className="flex flex-col sm:flex-row gap-2">
                       {submission.status === "new" && (
@@ -548,7 +566,7 @@ export default function AdminPage() {
                               toast.error("Failed to update status")
                             }
                           }}
-                          className="w-full sm:w-auto justify-start sm:justify-center"
+                          className="w-full sm:w-auto justify-start sm:justify-center bg-white/5 border-slate-700 text-white hover:bg-white/10"
                         >
                           <CheckCircle className="h-4 w-4 mr-2" />
                           Mark as Read
@@ -566,7 +584,7 @@ export default function AdminPage() {
                               toast.error("Failed to update status")
                             }
                           }}
-                          className="w-full sm:w-auto justify-start sm:justify-center"
+                          className="w-full sm:w-auto justify-start sm:justify-center bg-white/5 border-slate-700 text-white hover:bg-white/10"
                         >
                           <MessageCircle className="h-4 w-4 mr-2" />
                           Mark as Responded
@@ -584,7 +602,7 @@ export default function AdminPage() {
                             toast.error("Failed to delete submission")
                           }
                         }}
-                        className="w-full sm:w-auto justify-start sm:justify-center"
+                        className="w-full sm:w-auto justify-start sm:justify-center bg-red-600/20 border-red-600/30 text-red-400 hover:bg-red-600/30"
                       >
                         <Trash2 className="h-4 w-4 mr-2" />
                         Delete Submission
@@ -599,10 +617,10 @@ export default function AdminPage() {
 
         <TabsContent value="users" className="space-y-6">
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-            <h2 className="text-xl md:text-2xl font-bold text-red-700">User Management</h2>
+            <h2 className="text-xl md:text-2xl font-bold text-white">User Management</h2>
             <Button
               onClick={() => setShowUserForm(true)}
-              className="bg-red-700 hover:bg-red-800 w-full sm:w-auto"
+              className="bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all w-full sm:w-auto"
             >
               <Plus className="h-4 w-4 mr-2" />
               Add New User
@@ -610,7 +628,7 @@ export default function AdminPage() {
           </div>
 
           {!users || users.length === 0 ? (
-            <Alert>
+            <Alert className="border-slate-700 bg-white/5 backdrop-blur-sm text-gray-300">
               <AlertDescription>
                 No users found. Create your first user via the /auth/register page.
               </AlertDescription>
@@ -618,23 +636,23 @@ export default function AdminPage() {
           ) : (
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
               {users.map((user: any) => (
-                <Card key={user._id}>
+                <Card key={user._id} className="border-none bg-white/5 backdrop-blur-sm shadow-xl hover:shadow-2xl transition">
                   <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
-                      <Users className="h-5 w-5" />
+                    <CardTitle className="flex items-center gap-2 text-white">
+                      <Users className="h-5 w-5 text-red-400" />
                       {user.name || "Unnamed User"}
                     </CardTitle>
-                    <CardDescription>
+                    <CardDescription className="text-gray-400">
                       {user.email}
                     </CardDescription>
                   </CardHeader>
                   <CardContent>
                     <div className="space-y-2 text-sm">
-                      <p className="text-gray-600">
+                      <p className="text-gray-400">
                         <strong>Joined:</strong> {new Date(user._creationTime).toLocaleDateString()}
                       </p>
                       {user.emailVerificationTime && (
-                        <p className="text-green-600 flex items-center gap-1">
+                        <p className="text-green-400 flex items-center gap-1">
                           <CheckCircle className="h-4 w-4" />
                           Email Verified
                         </p>
@@ -644,7 +662,7 @@ export default function AdminPage() {
                       <Button
                         size="sm"
                         variant="outline"
-                        className="w-full justify-start"
+                        className="w-full justify-start bg-white/5 border-slate-700 text-white hover:bg-white/10"
                         onClick={() => setEditingUser(user)}
                       >
                         <Edit className="h-4 w-4 mr-2" />
@@ -653,7 +671,7 @@ export default function AdminPage() {
                       <Button
                         size="sm"
                         variant="destructive"
-                        className="w-full justify-start"
+                        className="w-full justify-start bg-red-600/20 border-red-600/30 text-red-400 hover:bg-red-600/30"
                         onClick={async () => {
                           if (!confirm(`Are you sure you want to delete user ${user.name || user.email}?`)) return
                           try {
@@ -676,6 +694,9 @@ export default function AdminPage() {
         </TabsContent>
 
         <TabsContent value="settings" className="space-y-6">
+          <div className="flex justify-between items-center mb-6">
+            <h2 className="text-xl md:text-2xl font-bold text-white">Site Settings</h2>
+          </div>
           <SiteSettings />
         </TabsContent>
       </Tabs>
@@ -724,6 +745,7 @@ export default function AdminPage() {
           // Users list will automatically refresh via Convex reactivity
         }}
       />
+      </div>
     </div>
   )
 }

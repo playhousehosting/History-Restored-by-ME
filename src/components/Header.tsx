@@ -1,6 +1,7 @@
 "use client"
 
 import Link from "next/link"
+import Image from "next/image"
 import { Suspense, useState } from "react"
 import { useAuthActions } from "@convex-dev/auth/react"
 import { useQuery } from "convex/react"
@@ -8,7 +9,7 @@ import { api } from "@convex/_generated/api"
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
 import { Command, CommandDialog, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command"
 import { Button } from "@/components/ui/button"
-import { Menu, Search, Home, Image, FileText, Mail, Settings, LogOut } from "lucide-react"
+import { Menu, Search, Home, Image as ImageIcon, FileText, Mail, Settings, LogOut } from "lucide-react"
 
 function HeaderContent() {
   // All hooks MUST be called first, unconditionally (React 19 strict rules)
@@ -23,8 +24,18 @@ function HeaderContent() {
       <header className="bg-red-800 text-white shadow-lg">
         <nav className="container mx-auto px-4 py-4">
           <div className="flex justify-between items-center">
-            <Link href="/" className="text-lg sm:text-xl md:text-2xl font-bold hover:text-red-200 transition truncate">
-              History Restored by ME
+            <Link href="/" className="flex items-center gap-3 hover:opacity-90 transition">
+              <Image 
+                src="/logo.png" 
+                alt="History Restored by ME Logo" 
+                width={64} 
+                height={64} 
+                className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 object-contain"
+                priority
+              />
+              <span className="text-lg sm:text-xl md:text-2xl font-bold text-white truncate">
+                History Restored by ME
+              </span>
             </Link>
             <div className="hidden md:flex items-center space-x-6">
               <Link href="/" className="hover:text-red-200 transition">
@@ -52,8 +63,18 @@ function HeaderContent() {
     <header className="bg-red-800 text-white shadow-lg">
       <nav className="container mx-auto px-4 py-4">
         <div className="flex justify-between items-center">
-          <Link href="/" className="text-lg sm:text-xl md:text-2xl font-bold hover:text-red-200 transition truncate max-w-[60%] sm:max-w-none">
-            History Restored by ME
+          <Link href="/" className="flex items-center gap-3 hover:opacity-90 transition max-w-[60%] sm:max-w-none">
+            <Image 
+              src="/logo.png" 
+              alt="History Restored by ME Logo" 
+              width={64} 
+              height={64} 
+              className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 object-contain"
+              priority
+            />
+            <span className="text-lg sm:text-xl md:text-2xl font-bold text-white truncate">
+              History Restored by ME
+            </span>
           </Link>
           
           {/* Desktop Navigation */}
@@ -133,7 +154,7 @@ function HeaderContent() {
                     <Link href="/"><Home className="h-4 w-4 mr-2" />Home</Link>
                   </Button>
                   <Button variant="ghost" className="w-full justify-start" asChild>
-                    <Link href="/gallery"><Image className="h-4 w-4 mr-2" />Gallery</Link>
+                    <Link href="/gallery"><ImageIcon className="h-4 w-4 mr-2" />Gallery</Link>
                   </Button>
                   <Button variant="ghost" className="w-full justify-start" asChild>
                     <Link href="/blog"><FileText className="h-4 w-4 mr-2" />Blog</Link>
@@ -179,7 +200,7 @@ function HeaderContent() {
               <span>Home</span>
             </CommandItem>
             <CommandItem onSelect={() => { window.location.href = '/gallery'; setCommandOpen(false); }}>
-              <Image className="mr-2 h-4 w-4" />
+              <ImageIcon className="mr-2 h-4 w-4" />
               <span>Gallery</span>
             </CommandItem>
             <CommandItem onSelect={() => { window.location.href = '/blog'; setCommandOpen(false); }}>
@@ -218,8 +239,18 @@ function LoadingHeader() {
     <header className="bg-red-800 text-white shadow-lg">
       <nav className="container mx-auto px-4 py-4">
         <div className="flex justify-between items-center">
-          <Link href="/" className="text-lg sm:text-xl md:text-2xl font-bold hover:text-red-200 transition truncate max-w-[60%] sm:max-w-none">
-            History Restored by ME
+          <Link href="/" className="flex items-center gap-3 hover:opacity-90 transition max-w-[60%] sm:max-w-none">
+            <Image 
+              src="/logo.png" 
+              alt="History Restored by ME Logo" 
+              width={64} 
+              height={64} 
+              className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 object-contain"
+              priority
+            />
+            <span className="text-lg sm:text-xl md:text-2xl font-bold text-white truncate">
+              History Restored by ME
+            </span>
           </Link>
           <div className="hidden md:flex items-center space-x-6">
             <Link href="/" className="hover:text-red-200 transition">
