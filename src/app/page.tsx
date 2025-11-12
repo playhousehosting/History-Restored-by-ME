@@ -60,15 +60,17 @@ export default function HomePage() {
               <Star className="h-4 w-4 text-yellow-400 fill-yellow-400" />
             </div>
 
-            {/* Main Heading */}
-            <h1 className="text-6xl md:text-7xl lg:text-8xl font-bold tracking-tight leading-tight">
-              <span className="block bg-gradient-to-r from-white via-gray-100 to-white bg-clip-text text-transparent">
-                History Restored
-              </span>
-              <span className="block bg-gradient-to-r from-red-500 via-red-600 to-red-500 bg-clip-text text-transparent mt-2">
-                by ME
-              </span>
-            </h1>
+            {/* Main Logo */}
+            <div className="flex justify-center">
+              <Image
+                src="/logo.png"
+                alt="History Restored by ME"
+                width={600}
+                height={200}
+                className="w-full max-w-2xl h-auto animate-float"
+                priority
+              />
+            </div>
 
             <p className="text-2xl md:text-3xl text-gray-300 font-light max-w-3xl mx-auto leading-relaxed">
               Specializes in Farmall but Can Fix Them All
