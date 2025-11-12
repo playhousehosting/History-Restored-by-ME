@@ -23,10 +23,10 @@ function HeaderContent() {
       <header className="bg-red-800 text-white shadow-lg">
         <nav className="container mx-auto px-4 py-4">
           <div className="flex justify-between items-center">
-            <Link href="/" className="text-2xl font-bold hover:text-red-200 transition">
+            <Link href="/" className="text-lg sm:text-xl md:text-2xl font-bold hover:text-red-200 transition truncate">
               History Restored by ME
             </Link>
-            <div className="flex items-center space-x-6">
+            <div className="hidden md:flex items-center space-x-6">
               <Link href="/" className="hover:text-red-200 transition">
                 Home
               </Link>
@@ -38,6 +38,10 @@ function HeaderContent() {
               </Link>
               <div className="h-10 w-24 bg-red-700 animate-pulse rounded" />
             </div>
+            <div className="flex md:hidden items-center gap-2">
+              <div className="h-8 w-8 bg-red-700 animate-pulse rounded" />
+              <div className="h-8 w-8 bg-red-700 animate-pulse rounded" />
+            </div>
           </div>
         </nav>
       </header>
@@ -48,7 +52,7 @@ function HeaderContent() {
     <header className="bg-red-800 text-white shadow-lg">
       <nav className="container mx-auto px-4 py-4">
         <div className="flex justify-between items-center">
-          <Link href="/" className="text-2xl font-bold hover:text-red-200 transition">
+          <Link href="/" className="text-lg sm:text-xl md:text-2xl font-bold hover:text-red-200 transition truncate max-w-[60%] sm:max-w-none">
             History Restored by ME
           </Link>
           
@@ -214,10 +218,10 @@ function LoadingHeader() {
     <header className="bg-red-800 text-white shadow-lg">
       <nav className="container mx-auto px-4 py-4">
         <div className="flex justify-between items-center">
-          <Link href="/" className="text-2xl font-bold hover:text-red-200 transition">
+          <Link href="/" className="text-lg sm:text-xl md:text-2xl font-bold hover:text-red-200 transition truncate max-w-[60%] sm:max-w-none">
             History Restored by ME
           </Link>
-          <div className="flex items-center space-x-6">
+          <div className="hidden md:flex items-center space-x-6">
             <Link href="/" className="hover:text-red-200 transition">
               Home
             </Link>
@@ -231,6 +235,10 @@ function LoadingHeader() {
               Contact
             </Link>
             <div className="h-10 w-24 bg-red-700 animate-pulse rounded" />
+          </div>
+          <div className="flex md:hidden items-center gap-2">
+            <div className="h-8 w-8 bg-red-700 animate-pulse rounded" />
+            <div className="h-8 w-8 bg-red-700 animate-pulse rounded" />
           </div>
         </div>
       </nav>

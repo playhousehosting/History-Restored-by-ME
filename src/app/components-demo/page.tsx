@@ -19,16 +19,16 @@ export default function ComponentsDemoPage() {
   const [currentPage, setCurrentPage] = useState(1)
 
   return (
-    <div className="container mx-auto px-4 py-12 max-w-7xl">
-      <div className="mb-12 text-center">
-        <h1 className="text-5xl font-bold mb-4 text-gray-900">Luxury Components Showcase</h1>
-        <p className="text-xl text-gray-600">Demonstrating all new shadcn/ui components</p>
+    <div className="container mx-auto px-4 py-8 md:py-12 max-w-7xl">
+      <div className="mb-8 md:mb-12 text-center">
+        <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-3 md:mb-4 text-gray-900">Luxury Components Showcase</h1>
+        <p className="text-base sm:text-lg md:text-xl text-gray-600">Demonstrating all new shadcn/ui components</p>
       </div>
 
-      <div className="space-y-12">
+      <div className="space-y-8 md:space-y-12">
         {/* Breadcrumb */}
         <section>
-          <h2 className="text-3xl font-bold mb-6 text-red-700">Breadcrumb Navigation</h2>
+          <h2 className="text-2xl sm:text-3xl font-bold mb-4 md:mb-6 text-red-700">Breadcrumb Navigation</h2>
           <Card>
             <CardHeader>
               <CardTitle>Breadcrumb Component</CardTitle>
@@ -58,7 +58,7 @@ export default function ComponentsDemoPage() {
 
         {/* Accordion */}
         <section>
-          <h2 className="text-3xl font-bold mb-6 text-red-700">Accordion</h2>
+          <h2 className="text-2xl sm:text-3xl font-bold mb-4 md:mb-6 text-red-700">Accordion</h2>
           <Card>
             <CardHeader>
               <CardTitle>Expandable FAQ Sections</CardTitle>
@@ -95,7 +95,7 @@ export default function ComponentsDemoPage() {
 
         {/* Carousel */}
         <section>
-          <h2 className="text-3xl font-bold mb-6 text-red-700">Carousel</h2>
+          <h2 className="text-2xl sm:text-3xl font-bold mb-4 md:mb-6 text-red-700">Carousel</h2>
           <Card>
             <CardHeader>
               <CardTitle>Image Gallery Carousel</CardTitle>
@@ -129,7 +129,7 @@ export default function ComponentsDemoPage() {
 
         {/* Tooltip */}
         <section>
-          <h2 className="text-3xl font-bold mb-6 text-red-700">Tooltips</h2>
+          <h2 className="text-2xl sm:text-3xl font-bold mb-4 md:mb-6 text-red-700">Tooltips</h2>
           <Card>
             <CardHeader>
               <CardTitle>Helpful Hover Hints</CardTitle>
@@ -167,7 +167,7 @@ export default function ComponentsDemoPage() {
 
         {/* Hover Card */}
         <section>
-          <h2 className="text-3xl font-bold mb-6 text-red-700">Hover Card</h2>
+          <h2 className="text-2xl sm:text-3xl font-bold mb-4 md:mb-6 text-red-700">Hover Card</h2>
           <Card>
             <CardHeader>
               <CardTitle>Rich Preview on Hover</CardTitle>
@@ -203,7 +203,7 @@ export default function ComponentsDemoPage() {
 
         {/* Popover */}
         <section>
-          <h2 className="text-3xl font-bold mb-6 text-red-700">Popover</h2>
+          <h2 className="text-2xl sm:text-3xl font-bold mb-4 md:mb-6 text-red-700">Popover</h2>
           <Card>
             <CardHeader>
               <CardTitle>Click-triggered Overlays</CardTitle>
@@ -249,7 +249,7 @@ export default function ComponentsDemoPage() {
 
         {/* Sheet (Side Panel) */}
         <section>
-          <h2 className="text-3xl font-bold mb-6 text-red-700">Sheet (Side Drawer)</h2>
+          <h2 className="text-2xl sm:text-3xl font-bold mb-4 md:mb-6 text-red-700">Sheet (Side Drawer)</h2>
           <Card>
             <CardHeader>
               <CardTitle>Slide-out Side Panels</CardTitle>
@@ -289,7 +289,7 @@ export default function ComponentsDemoPage() {
 
         {/* Command */}
         <section>
-          <h2 className="text-3xl font-bold mb-6 text-red-700">Command Palette</h2>
+          <h2 className="text-2xl sm:text-3xl font-bold mb-4 md:mb-6 text-red-700">Command Palette</h2>
           <Card>
             <CardHeader>
               <CardTitle>Quick Search & Actions</CardTitle>
@@ -333,7 +333,7 @@ export default function ComponentsDemoPage() {
 
         {/* Pagination */}
         <section>
-          <h2 className="text-3xl font-bold mb-6 text-red-700">Pagination</h2>
+          <h2 className="text-2xl sm:text-3xl font-bold mb-4 md:mb-6 text-red-700">Pagination</h2>
           <Card>
             <CardHeader>
               <CardTitle>Page Navigation</CardTitle>
@@ -407,9 +407,9 @@ export default function ComponentsDemoPage() {
         </section>
 
         {/* Summary */}
-        <section className="bg-gradient-to-r from-red-50 to-gray-50 p-8 rounded-xl">
-          <h2 className="text-3xl font-bold mb-4 text-red-700 text-center">All Components Verified! ✅</h2>
-          <p className="text-center text-gray-700 text-lg">
+        <section className="bg-gradient-to-r from-red-50 to-gray-50 p-6 md:p-8 rounded-xl">
+          <h2 className="text-2xl sm:text-3xl font-bold mb-3 md:mb-4 text-red-700 text-center">All Components Verified! ✅</h2>
+          <p className="text-center text-gray-700 text-base md:text-lg">
             All luxury shadcn/ui components are fully functional and ready to use throughout your application.
           </p>
         </section>
