@@ -85,4 +85,28 @@ export default defineSchema({
     updatedAt: v.number(),
     updatedBy: v.optional(v.id("users")),
   }),
+
+  // File storage metadata for Convex file storage
+  files: defineTable({
+    storageId: v.id("_storage"),
+    name: v.string(),
+    type: v.string(), // MIME type
+    size: v.number(), // bytes
+    url: v.optional(v.string()), // Convex storage URL
+    uploadedBy: v.id("users"),
+    usedIn: v.optional(v.union(
+      v.object({
+        type: v.literal("project"),
+        id: v.id("projects"),
+      }),
+      v.object({
+        type: v.literal("blogPost"),
+        id: v.id("blogPosts"),
+      })
+    )),
+    createdAt: v.number(),
+  })
+    .index("by_storage", ["storageId"])
+    .index("by_user", ["uploadedBy"])
+    .index("by_created", ["createdAt"]),
 });

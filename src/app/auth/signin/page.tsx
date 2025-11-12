@@ -178,6 +178,27 @@ export default function SignInPage() {
               )}
             </Button>
           </form>
+
+          <div className="relative my-6">
+            <div className="absolute inset-0 flex items-center">
+              <div className="w-full border-t border-white/10"></div>
+            </div>
+            <div className="relative flex justify-center text-xs uppercase">
+              <span className="bg-slate-900 px-2 text-gray-400">Or</span>
+            </div>
+          </div>
+
+          <Link href="/auth/magic-link">
+            <Button
+              type="button"
+              variant="outline"
+              className="w-full bg-white/5 border-white/20 text-white hover:bg-white/10"
+            >
+              <Mail className="h-4 w-4 mr-2" />
+              Sign In with Magic Link
+            </Button>
+          </Link>
+
           <div className="mt-6 text-center text-sm text-gray-400">
             Don't have an account?{" "}
             <Link href="/auth/register" className="text-red-400 hover:text-red-300 font-semibold transition">

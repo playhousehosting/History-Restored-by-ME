@@ -14,6 +14,7 @@ import type * as blogPosts from "../blogPosts.js";
 import type * as contactSubmissions from "../contactSubmissions.js";
 import type * as crons from "../crons.js";
 import type * as deleteUser from "../deleteUser.js";
+import type * as files from "../files.js";
 import type * as http from "../http.js";
 import type * as projects from "../projects.js";
 import type * as scheduledPosts from "../scheduledPosts.js";
@@ -33,6 +34,7 @@ declare const fullApi: ApiFromModules<{
   contactSubmissions: typeof contactSubmissions;
   crons: typeof crons;
   deleteUser: typeof deleteUser;
+  files: typeof files;
   http: typeof http;
   projects: typeof projects;
   scheduledPosts: typeof scheduledPosts;
