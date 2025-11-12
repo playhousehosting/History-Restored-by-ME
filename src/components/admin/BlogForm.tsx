@@ -11,6 +11,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { Switch } from "@/components/ui/switch"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { RichTextEditor } from "./RichTextEditor"
+import { SingleImageUploader } from "./SingleImageUploader"
 import { toast } from "sonner"
 import { Loader2, Eye } from "lucide-react"
 import type { Id } from "@convex/_generated/dataModel"
@@ -175,12 +176,18 @@ export function BlogForm({ post, onClose, onSave }: BlogFormProps) {
           </div>
 
           <div>
-            <Label htmlFor="featuredImage">Featured Image URL (optional)</Label>
+            <Label htmlFor="featuredImage">Featured Image</Label>
+            <SingleImageUploader
+              currentImage={formData.featuredImage}
+              onImageChange={(url) => setFormData({ ...formData, featuredImage: url })}
+              label="Upload Featured Image"
+            />
             <Input
               id="featuredImage"
               value={formData.featuredImage}
               onChange={(e) => setFormData({ ...formData, featuredImage: e.target.value })}
-              placeholder="https://..."
+              placeholder="Or paste image URL directly"
+              className="mt-2"
             />
           </div>
 

@@ -2,6 +2,8 @@
 
 import { useCallback, useState } from "react"
 import { useDropzone } from "react-dropzone"
+import { useMutation } from "convex/react"
+import { api } from "@convex/_generated/api"
 import ReactCrop, { Crop, PixelCrop } from "react-image-crop"
 import "react-image-crop/dist/ReactCrop.css"
 import { Button } from "@/components/ui/button"
@@ -20,36 +22,65 @@ export function ImageUploader({ onImagesUploaded, maxFiles = 10 }: ImageUploader
   const [crop, setCrop] = useState<Crop>()
   const [completedCrop, setCompletedCrop] = useState<PixelCrop>()
 
+  const generateUploadUrl = useMutation(api.files.generateUploadUrl)
+  const saveFileMetadata = useMutation(api.files.saveFileMetadata)
+
   const onDrop = useCallback(
     async (acceptedFiles: File[]) => {
       setUploading(true)
       try {
         const uploadPromises = acceptedFiles.map(async (file) => {
-          const formData = new FormData()
-          formData.append("file", file)
+          // Validate file type
+          if (!file.type.startsWith("image/")) {
+            throw new Error(`${file.name} is not an image`)
+          }
 
-          const response = await fetch("/api/uploadthing", {
+          // Validate file size (max 10MB)
+          if (file.size > 10 * 1024 * 1024) {
+            throw new Error(`${file.name} is too large (max 10MB)`)
+          }
+
+          // Step 1: Get upload URL from Convex
+          const uploadUrl = await generateUploadUrl()
+
+          // Step 2: Upload file to Convex storage
+          const result = await fetch(uploadUrl, {
             method: "POST",
-            body: formData,
+            headers: { "Content-Type": file.type },
+            body: file,
           })
 
-          if (!response.ok) throw new Error("Upload failed")
+          if (!result.ok) {
+            throw new Error(`Failed to upload ${file.name}`)
+          }
 
-          const data = await response.json()
-          return data.url
+          const { storageId } = await result.json()
+
+          // Step 3: Save file metadata
+          await saveFileMetadata({
+            storageId,
+            name: file.name,
+            type: file.type,
+            size: file.size,
+          })
+
+          // Step 4: Get file URL
+          const fileUrl = new URL(uploadUrl)
+          fileUrl.pathname = `/api/storage/${storageId}`
+          return fileUrl.toString()
         })
 
         const urls = await Promise.all(uploadPromises)
         onImagesUploaded(urls)
         toast.success(`${urls.length} image(s) uploaded successfully!`)
-      } catch (error) {
+      } catch (error: any) {
         console.error("Upload error:", error)
-        toast.error("Failed to upload images")
+        toast.error(error.message || "Failed to upload images")
       } finally {
         setUploading(false)
       }
     },
-    [onImagesUploaded]
+    [onImagesUploaded, generateUploadUrl, saveFileMetadata]
   )
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
