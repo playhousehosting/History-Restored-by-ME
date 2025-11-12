@@ -93,52 +93,56 @@ export default function AdminPage() {
 
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <div className="flex justify-between items-center mb-8">
-        <h1 className="text-4xl font-bold text-gray-900">Admin Dashboard</h1>
+    <div className="container mx-auto px-4 py-4 md:py-8">
+      <div className="flex justify-between items-center mb-6 md:mb-8">
+        <h1 className="text-2xl md:text-4xl font-bold text-gray-900">Admin Dashboard</h1>
       </div>
 
       <Tabs defaultValue="projects" className="space-y-6">
-        <TabsList className="grid w-full max-w-5xl grid-cols-7">
-          <TabsTrigger value="projects" className="flex items-center gap-2">
-            <ImageIcon className="h-4 w-4" />
-            Projects
+        <TabsList className="grid w-full grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7 gap-1">
+          <TabsTrigger value="projects" className="flex items-center gap-1 md:gap-2 text-xs md:text-sm">
+            <ImageIcon className="h-3 w-3 md:h-4 md:w-4" />
+            <span className="hidden sm:inline">Projects</span>
+            <span className="sm:hidden">Proj</span>
           </TabsTrigger>
-          <TabsTrigger value="blog" className="flex items-center gap-2">
-            <FileText className="h-4 w-4" />
+          <TabsTrigger value="blog" className="flex items-center gap-1 md:gap-2 text-xs md:text-sm">
+            <FileText className="h-3 w-3 md:h-4 md:w-4" />
             Blog
           </TabsTrigger>
-          <TabsTrigger value="ai-generator" className="flex items-center gap-2">
-            <Sparkles className="h-4 w-4" />
-            AI Generator
+          <TabsTrigger value="ai-generator" className="flex items-center gap-1 md:gap-2 text-xs md:text-sm">
+            <Sparkles className="h-3 w-3 md:h-4 md:w-4" />
+            <span className="hidden sm:inline">AI Generator</span>
+            <span className="sm:hidden">AI</span>
           </TabsTrigger>
-          <TabsTrigger value="drafts" className="flex items-center gap-2">
-            <FileEdit className="h-4 w-4" />
+          <TabsTrigger value="drafts" className="flex items-center gap-1 md:gap-2 text-xs md:text-sm">
+            <FileEdit className="h-3 w-3 md:h-4 md:w-4" />
             Drafts
           </TabsTrigger>
-          <TabsTrigger value="contacts" className="flex items-center gap-2">
-            <Mail className="h-4 w-4" />
-            Contacts
+          <TabsTrigger value="contacts" className="flex items-center gap-1 md:gap-2 text-xs md:text-sm">
+            <Mail className="h-3 w-3 md:h-4 md:w-4" />
+            <span className="hidden sm:inline">Contacts</span>
+            <span className="sm:hidden">Mail</span>
           </TabsTrigger>
-          <TabsTrigger value="users" className="flex items-center gap-2">
-            <Users className="h-4 w-4" />
+          <TabsTrigger value="users" className="flex items-center gap-1 md:gap-2 text-xs md:text-sm">
+            <Users className="h-3 w-3 md:h-4 md:w-4" />
             Users
           </TabsTrigger>
-          <TabsTrigger value="settings" className="flex items-center gap-2">
-            <Settings className="h-4 w-4" />
-            Settings
+          <TabsTrigger value="settings" className="flex items-center gap-1 md:gap-2 text-xs md:text-sm">
+            <Settings className="h-3 w-3 md:h-4 md:w-4" />
+            <span className="hidden sm:inline">Settings</span>
+            <span className="sm:hidden">Set</span>
           </TabsTrigger>
         </TabsList>
 
         <TabsContent value="projects" className="space-y-6">
-          <div className="flex justify-between items-center">
-            <h2 className="text-2xl font-bold text-red-700">Manage Projects</h2>
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+            <h2 className="text-xl md:text-2xl font-bold text-red-700">Manage Projects</h2>
             <Button
               onClick={() => {
                 setEditingProject(null)
                 setShowProjectForm(true)
               }}
-              className="bg-red-700 hover:bg-red-800"
+              className="bg-red-700 hover:bg-red-800 w-full sm:w-auto"
             >
               <Plus className="h-4 w-4 mr-2" />
               New Project
@@ -220,14 +224,14 @@ export default function AdminPage() {
         </TabsContent>
 
         <TabsContent value="blog" className="space-y-6">
-          <div className="flex justify-between items-center">
-            <h2 className="text-2xl font-bold text-red-700">Manage Blog Posts</h2>
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+            <h2 className="text-xl md:text-2xl font-bold text-red-700">Manage Blog Posts</h2>
             <Button
               onClick={() => {
                 setEditingBlog(null)
                 setShowBlogForm(true)
               }}
-              className="bg-red-700 hover:bg-red-800"
+              className="bg-red-700 hover:bg-red-800 w-full sm:w-auto"
             >
               <Plus className="h-4 w-4 mr-2" />
               New Post
@@ -301,8 +305,8 @@ export default function AdminPage() {
         <TabsContent value="ai-generator" className="space-y-6">
           <div className="flex justify-between items-center mb-4">
             <div>
-              <h2 className="text-2xl font-bold text-red-700">AI Blog Post Generator</h2>
-              <p className="text-gray-600 mt-1">Generate comprehensive, SEO-optimized blog posts about tractors and machinery</p>
+              <h2 className="text-xl md:text-2xl font-bold text-red-700">AI Blog Post Generator</h2>
+              <p className="text-sm md:text-base text-gray-600 mt-1">Generate comprehensive, SEO-optimized blog posts about tractors and machinery</p>
             </div>
           </div>
 
@@ -351,12 +355,12 @@ export default function AdminPage() {
         </TabsContent>
 
         <TabsContent value="drafts" className="space-y-6">
-          <div className="flex justify-between items-center">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
             <div>
-              <h2 className="text-2xl font-bold text-red-700">Draft Blog Posts</h2>
-              <p className="text-gray-600 mt-1">Review AI-generated drafts and unpublished posts</p>
+              <h2 className="text-xl md:text-2xl font-bold text-red-700">Draft Blog Posts</h2>
+              <p className="text-sm md:text-base text-gray-600 mt-1">Review AI-generated drafts and unpublished posts</p>
             </div>
-            <Badge variant="outline" className="text-lg px-3 py-1">
+            <Badge variant="outline" className="text-sm md:text-lg px-2 md:px-3 py-1 whitespace-nowrap">
               {aiDrafts?.length || 0} AI Drafts
             </Badge>
           </div>
@@ -473,7 +477,7 @@ export default function AdminPage() {
 
         <TabsContent value="contacts" className="space-y-6">
           <div className="flex justify-between items-center">
-            <h2 className="text-2xl font-bold text-red-700">Contact Form Submissions</h2>
+            <h2 className="text-xl md:text-2xl font-bold text-red-700">Contact Form Submissions</h2>
           </div>
 
           {!contactSubmissions || contactSubmissions.length === 0 ? (
@@ -576,11 +580,11 @@ export default function AdminPage() {
         </TabsContent>
 
         <TabsContent value="users" className="space-y-6">
-          <div className="flex justify-between items-center">
-            <h2 className="text-2xl font-bold text-red-700">User Management</h2>
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+            <h2 className="text-xl md:text-2xl font-bold text-red-700">User Management</h2>
             <Button
               onClick={() => router.push("/auth/register")}
-              className="bg-red-700 hover:bg-red-800"
+              className="bg-red-700 hover:bg-red-800 w-full sm:w-auto"
             >
               <Plus className="h-4 w-4 mr-2" />
               Add New User

@@ -99,7 +99,7 @@ export function AIBlogGenerator({ onSuccess }: { onSuccess?: () => void }) {
 
           <div>
             <Label>Quick Topic Suggestions</Label>
-            <div className="flex flex-wrap gap-2 mt-2">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 mt-2">
               {suggestedTopics.map((suggested, index) => (
                 <Button
                   key={index}
@@ -108,7 +108,7 @@ export function AIBlogGenerator({ onSuccess }: { onSuccess?: () => void }) {
                   size="sm"
                   onClick={() => setTopic(suggested)}
                   disabled={isGenerating}
-                  className="text-xs"
+                  className="text-xs justify-start"
                 >
                   {suggested}
                 </Button>
@@ -148,9 +148,9 @@ export function AIBlogGenerator({ onSuccess }: { onSuccess?: () => void }) {
           </div>
         </div>
 
-        <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-          <h4 className="font-semibold text-blue-900 mb-2">✨ What will be generated:</h4>
-          <ul className="text-sm text-blue-800 space-y-1">
+        <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 md:p-4">
+          <h4 className="font-semibold text-blue-900 mb-2 text-sm md:text-base">✨ What will be generated:</h4>
+          <ul className="text-xs md:text-sm text-blue-800 space-y-1">
             <li>• 1200-1800 word comprehensive article</li>
             <li>• SEO-optimized meta title & description</li>
             <li>• Structured with H2/H3 headings</li>
@@ -164,11 +164,11 @@ export function AIBlogGenerator({ onSuccess }: { onSuccess?: () => void }) {
           <Alert className="bg-green-50 border-green-200">
             <CheckCircle className="h-4 w-4 text-green-600" />
             <AlertDescription className="text-green-800">
-              <strong>Blog post generated successfully!</strong>
-              <div className="mt-2 space-y-1 text-sm">
-                <p>• Title: {result.preview?.title}</p>
+              <strong className="text-sm md:text-base">Blog post generated successfully!</strong>
+              <div className="mt-2 space-y-1 text-xs md:text-sm">
+                <p className="break-words">• Title: {result.preview?.title}</p>
                 <p>• Word Count: {result.preview?.wordCount || 0}</p>
-                <p>• Tags: {result.preview?.tags}</p>
+                <p className="break-words">• Tags: {result.preview?.tags}</p>
                 <p className="mt-2 font-semibold">Check the "Drafts" tab to review and publish!</p>
               </div>
             </AlertDescription>
