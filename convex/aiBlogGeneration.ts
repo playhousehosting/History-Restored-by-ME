@@ -22,8 +22,12 @@ export const generateBlogPost = action({
       v.literal("html"),
       v.literal("markdown")
     )),
+    length: v.optional(v.union(
+      v.literal("standard"),
+      v.literal("long")
+    )),
   },
-  handler: async (ctx, { topic, keywords = "", tone = "professional", format = "html" }) => {
+  handler: async (ctx, { topic, keywords = "", tone = "professional", format = "html", length = "standard" }) => {
     // Verify user is authenticated - get userId from query that has access to ctx
     const userId = await ctx.runQuery(api.aiBlogGeneration.getCurrentUserId);
     if (!userId) {
@@ -56,7 +60,9 @@ MANDATORY RULES:
 2. DO NOT write "Here is" or any introduction
 3. Every sentence MUST be inside HTML tags
 4. NO PLAIN TEXT ALLOWED
-5. Create a 1800-2500 word magazine article
+5. WORD COUNT REQUIREMENT: You MUST write ${length === "long" ? "2500-4000 words" : "MINIMUM 1800 words, target 2000-2500 words"}
+6. DO NOT STOP WRITING until you reach the required word count
+7. Each major section should be 200-400 words minimum
 
 HTML STRUCTURE TO GENERATE:
 
@@ -119,10 +125,31 @@ CONTENT REQUIREMENTS:
 - Include specific dates, model numbers, specifications
 - Weave in historical context and cultural impact
 - Make technical details accessible and engaging
-- Create 6-8 major sections with compelling titles
-- Use 12-20 subsections (H3 headings)
-- Include blockquotes for emphasis
-- Rich bullet lists with specifications
+- Create ${length === "long" ? "8-12 major sections (MINIMUM 8)" : "6-8 major sections (MINIMUM 6)"} with compelling titles
+- Use ${length === "long" ? "20-30 subsections" : "15-20 subsections"} (H3 headings)
+- Include ${length === "long" ? "4-6 blockquotes" : "3-4 blockquotes"} for emphasis
+- Rich bullet lists with specifications (at least 5-8 items per list)
+- ${length === "long" ? "Extensive technical deep-dives, multiple case studies, expert interviews, and comprehensive restoration guides" : "Solid technical coverage with restoration tips"}
+- Each paragraph should be 3-5 sentences minimum
+- Each major section should have 2-4 paragraphs PLUS subsections
+- IMPORTANT: Keep writing until you reach ${length === "long" ? "2500-4000 words" : "1800-2500 words"}
+
+SECTION STRUCTURE EXAMPLE (follow this pattern for ALL sections):
+<h2>Major Section Title</h2>
+<p>Introduction paragraph (4-5 sentences explaining the section topic)</p>
+<p>Second paragraph with details (4-5 sentences)</p>
+<h3>Subsection 1</h3>
+<p>Detailed content (4-5 sentences)</p>
+<p>More details (3-4 sentences)</p>
+<h3>Subsection 2</h3>
+<p>Detailed content (4-5 sentences)</p>
+<ul>
+  <li>Detail point 1</li>
+  <li>Detail point 2</li>
+  <li>Detail point 3</li>
+  <li>Detail point 4</li>
+  <li>Detail point 5</li>
+</ul>
 
 BEGIN YOUR RESPONSE WITH: <div style="max-width: 900px;
 
@@ -132,14 +159,21 @@ DO NOT WRITE ANY INTRODUCTORY TEXT. OUTPUT ONLY HTML CODE.`;
 
 Write a comprehensive, SEO-optimized blog post about: "${topic}"
 
+CRITICAL WORD COUNT REQUIREMENT:
+- YOU MUST WRITE ${length === "long" ? "MINIMUM 2500 words, target 3000-4000 words" : "MINIMUM 1800 words, target 2000-2500 words"}
+- DO NOT STOP WRITING until you reach the required word count
+- Each major section should be 200-400 words minimum
+
 CONTENT REQUIREMENTS:
-- Length: 1500-2000 words (comprehensive and detailed)
 - Tone: ${tone}
 - Include specific technical details, history, and restoration insights
 - Create engaging narrative that captivates readers
 - Natural keyword integration: ${keywords || topic}
 - Include maintenance tips, historical context, and collector value insights
+${length === "long" ? "- Extensive sections on: engineering innovations, case studies, expert perspectives, market analysis, restoration challenges, and future outlook" : ""}
 - Use specific model numbers, years, and technical specifications
+- Each paragraph should be 3-5 sentences minimum
+- Use detailed bullet lists with 5-8 items minimum
 
 FORMAT: Use clean Markdown formatting:
 - ## for main headings
@@ -158,7 +192,7 @@ Start writing the article now:`;
       console.log("Calling Anthropic API for topic:", topic);
       const message = await anthropic.messages.create({
         model: "claude-3-5-haiku-20241022", // Claude Haiku 4.5
-        max_tokens: 4096,
+        max_tokens: 100000, // Maximum output tokens for comprehensive articles
         temperature: 0.7,
         messages: [
           {

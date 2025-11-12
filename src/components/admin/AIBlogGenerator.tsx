@@ -20,6 +20,7 @@ export function AIBlogGenerator({ onSuccess }: { onSuccess?: () => void }) {
   const [keywords, setKeywords] = useState("")
   const [tone, setTone] = useState<"professional" | "casual" | "enthusiast" | "technical">("professional")
   const [format, setFormat] = useState<"html" | "markdown">("html")
+  const [length, setLength] = useState<"standard" | "long">("standard")
   const [isGenerating, setIsGenerating] = useState(false)
   const [result, setResult] = useState<any>(null)
   const [previewOpen, setPreviewOpen] = useState(false)
@@ -46,6 +47,7 @@ export function AIBlogGenerator({ onSuccess }: { onSuccess?: () => void }) {
         keywords: keywords.trim() || undefined,
         tone,
         format,
+        length,
       })
 
       setResult(response)
@@ -57,6 +59,7 @@ export function AIBlogGenerator({ onSuccess }: { onSuccess?: () => void }) {
       setKeywords("")
       setTone("professional")
       setFormat("html")
+      setLength("standard")
       
       // Call onSuccess callback
       if (onSuccess) {
@@ -174,12 +177,28 @@ export function AIBlogGenerator({ onSuccess }: { onSuccess?: () => void }) {
               HTML provides better formatting in the rich text editor
             </p>
           </div>
+
+          <div>
+            <Label htmlFor="length">Article Length</Label>
+            <Select value={length} onValueChange={(value: any) => setLength(value)} disabled={isGenerating}>
+              <SelectTrigger className="mt-1.5">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="standard">Standard - 1200-1800 words (Quick read)</SelectItem>
+                <SelectItem value="long">Long Form - 2500-4000 words (In-depth analysis)</SelectItem>
+              </SelectContent>
+            </Select>
+            <p className="text-sm text-gray-500 mt-1">
+              Long form articles provide comprehensive coverage with extensive details
+            </p>
+          </div>
         </div>
 
         <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 md:p-4">
           <h4 className="font-semibold text-blue-900 mb-2 text-sm md:text-base">✨ What will be generated:</h4>
           <ul className="text-xs md:text-sm text-blue-800 space-y-1">
-            <li>• 1200-1800 word comprehensive article</li>
+            <li>• {length === "long" ? "2500-4000 word in-depth article" : "1200-1800 word comprehensive article"}</li>
             <li>• SEO-optimized meta title & description</li>
             <li>• Structured with H2/H3 headings</li>
             <li>• Historical context & technical details</li>
