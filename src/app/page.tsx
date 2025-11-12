@@ -145,45 +145,51 @@ export default function HomePage() {
                 icon: Wrench,
                 title: "Master Craftsmanship",
                 description: "40+ years of specialized experience in vintage tractor restoration with unmatched attention to detail and historical accuracy.",
-                color: "red"
+                bgGradient: "bg-gradient-to-br from-red-500 to-red-600",
+                hoverBg: "bg-gradient-to-br from-red-50 to-transparent"
               },
               {
                 icon: Shield,
                 title: "Premium Quality",
                 description: "Every restoration backed by our comprehensive quality guarantee and lifetime craftsmanship warranty.",
-                color: "blue"
+                bgGradient: "bg-gradient-to-br from-blue-500 to-blue-600",
+                hoverBg: "bg-gradient-to-br from-blue-50 to-transparent"
               },
               {
                 icon: Zap,
                 title: "Fast Turnaround",
                 description: "Efficient project management ensures your restoration is completed on schedule without compromising quality.",
-                color: "yellow"
+                bgGradient: "bg-gradient-to-br from-yellow-500 to-yellow-600",
+                hoverBg: "bg-gradient-to-br from-yellow-50 to-transparent"
               },
               {
                 icon: Award,
                 title: "Award Winning",
                 description: "Recognized industry leader with numerous awards for restoration excellence and customer satisfaction.",
-                color: "purple"
+                bgGradient: "bg-gradient-to-br from-purple-500 to-purple-600",
+                hoverBg: "bg-gradient-to-br from-purple-50 to-transparent"
               },
               {
                 icon: Target,
                 title: "Precision Engineering",
                 description: "State-of-the-art tools combined with traditional techniques ensure perfect results every time.",
-                color: "green"
+                bgGradient: "bg-gradient-to-br from-green-500 to-green-600",
+                hoverBg: "bg-gradient-to-br from-green-50 to-transparent"
               },
               {
                 icon: Heart,
                 title: "Passionate Service",
                 description: "We treat every tractor as if it were our own, dedicating our passion and expertise to your project.",
-                color: "pink"
+                bgGradient: "bg-gradient-to-br from-pink-500 to-pink-600",
+                hoverBg: "bg-gradient-to-br from-pink-50 to-transparent"
               }
             ].map((feature, i) => {
               const IconComponent = feature.icon;
               return (
                 <Card key={i} className="group relative overflow-hidden border-none shadow-xl hover:shadow-2xl transition-all duration-500 hover:-translate-y-2">
-                  <div className={`absolute inset-0 bg-gradient-to-br from-${feature.color}-50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500`} />
+                  <div className={`absolute inset-0 ${feature.hoverBg} opacity-0 group-hover:opacity-100 transition-opacity duration-500`} />
                   <CardHeader className="relative">
-                    <div className={`w-16 h-16 bg-gradient-to-br from-${feature.color}-500 to-${feature.color}-600 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 group-hover:rotate-3 transition-all duration-500 shadow-lg`}>
+                    <div className={`w-16 h-16 ${feature.bgGradient} rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 group-hover:rotate-3 transition-all duration-500 shadow-lg`}>
                       <IconComponent className="h-8 w-8 text-white" />
                     </div>
                     <CardTitle className="text-2xl mb-3">{feature.title}</CardTitle>

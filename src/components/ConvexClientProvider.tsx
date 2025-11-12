@@ -16,9 +16,6 @@ if (!convexUrl) {
 
 const convexClient = new ConvexReactClient(convexUrl);
 
-console.log("✅ Convex URL:", convexUrl);
-console.log("🔄 Convex client initialized successfully");
-
 export function ConvexClientProvider({ children }: { children: ReactNode }) {
   return (
     <ConvexAuthNextjsProvider client={convexClient}>
