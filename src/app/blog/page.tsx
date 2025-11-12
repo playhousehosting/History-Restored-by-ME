@@ -3,6 +3,7 @@
 import { useQuery } from "convex/react"
 import { api } from "@convex/_generated/api"
 import Link from "next/link"
+import Image from "next/image"
 import { Card } from "@/components/ui/card"
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb"
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card"
@@ -101,34 +102,53 @@ export default function BlogPage() {
               <HoverCard key={post._id}>
                 <HoverCardTrigger asChild>
                   <Link href={`/blog/${post.slug}`}>
-                    <Card className="border-none bg-white/5 backdrop-blur-sm shadow-xl hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 p-8 group cursor-pointer">
-                      <div className="flex items-start justify-between mb-4">
-                        <h2 className="text-3xl font-bold text-white group-hover:text-red-400 transition flex-1 leading-tight">
-                          {post.title}
-                        </h2>
-                        {post.aiGenerated && (
-                          <Badge className="ml-4 bg-gradient-to-r from-blue-600/20 to-purple-600/20 text-blue-400 border-blue-600/30 backdrop-blur-sm">
-                            <Sparkles className="h-3 w-3 mr-1" />
-                            AI
-                          </Badge>
-                        )}
-                      </div>
-                      {post.excerpt && (
-                        <p className="text-gray-400 mb-6 text-lg leading-relaxed">{post.excerpt}</p>
-                      )}
-                      <div className="flex items-center justify-between pt-4 border-t border-slate-800">
-                        <div className="flex items-center text-gray-500 text-sm">
-                          <Calendar className="h-4 w-4 mr-2" />
-                          {new Date(post.createdAt).toLocaleDateString('en-US', { 
-                            month: 'long', 
-                            day: 'numeric', 
-                            year: 'numeric' 
-                          })}
+                    <Card className="border-none bg-white/5 backdrop-blur-sm shadow-xl hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 overflow-hidden group cursor-pointer">
+                      {post.featuredImage && (
+                        <div className="relative h-64 w-full overflow-hidden bg-gradient-to-br from-gray-800 to-gray-900">
+                          <Image
+                            src={post.featuredImage}
+                            alt={post.title}
+                            fill
+                            className="object-cover group-hover:scale-110 transition-transform duration-700"
+                          />
+                          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
+                          {post.aiGenerated && (
+                            <Badge className="absolute top-4 right-4 bg-gradient-to-r from-blue-600/90 to-purple-600/90 text-white border-blue-600/50 backdrop-blur-sm shadow-lg">
+                              <Sparkles className="h-3 w-3 mr-1" />
+                              AI Generated
+                            </Badge>
+                          )}
                         </div>
-                        <span className="flex items-center text-red-400 font-semibold group-hover:text-red-300 transition">
-                          Read more
-                          <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
-                        </span>
+                      )}
+                      <div className="p-8">
+                        <div className="flex items-start justify-between mb-4">
+                          <h2 className="text-3xl font-bold text-white group-hover:text-red-400 transition flex-1 leading-tight">
+                            {post.title}
+                          </h2>
+                          {!post.featuredImage && post.aiGenerated && (
+                            <Badge className="ml-4 bg-gradient-to-r from-blue-600/20 to-purple-600/20 text-blue-400 border-blue-600/30 backdrop-blur-sm">
+                              <Sparkles className="h-3 w-3 mr-1" />
+                              AI
+                            </Badge>
+                          )}
+                        </div>
+                        {post.excerpt && (
+                          <p className="text-gray-400 mb-6 text-lg leading-relaxed">{post.excerpt}</p>
+                        )}
+                        <div className="flex items-center justify-between pt-4 border-t border-slate-800">
+                          <div className="flex items-center text-gray-500 text-sm">
+                            <Calendar className="h-4 w-4 mr-2" />
+                            {new Date(post.createdAt).toLocaleDateString('en-US', { 
+                              month: 'long', 
+                              day: 'numeric', 
+                              year: 'numeric' 
+                            })}
+                          </div>
+                          <span className="flex items-center text-red-400 font-semibold group-hover:text-red-300 transition">
+                            Read more
+                            <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
+                          </span>
+                        </div>
                       </div>
                     </Card>
                   </Link>
