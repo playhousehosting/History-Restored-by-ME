@@ -17,6 +17,7 @@ import { ProjectForm } from "@/components/admin/ProjectForm"
 import { BlogForm } from "@/components/admin/BlogForm"
 import { AIBlogGenerator } from "@/components/admin/AIBlogGenerator"
 import { UserForm } from "@/components/admin/UserForm"
+import { EditUserDialog } from "@/components/admin/EditUserDialog"
 import SiteSettings from "@/components/admin/SiteSettings"
 import type { Id } from "@convex/_generated/dataModel"
 
@@ -31,6 +32,7 @@ export default function AdminPage() {
   const [showProjectForm, setShowProjectForm] = useState(false);
   const [showBlogForm, setShowBlogForm] = useState(false);
   const [showUserForm, setShowUserForm] = useState(false);
+  const [editingUser, setEditingUser] = useState<any>(null);
   const [editingProject, setEditingProject] = useState<any>(null);
   const [editingBlog, setEditingBlog] = useState<any>(null);
 
@@ -638,11 +640,20 @@ export default function AdminPage() {
                         </p>
                       )}
                     </div>
-                    <div className="mt-4">
+                    <div className="mt-4 flex flex-col gap-2">
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        className="w-full justify-start"
+                        onClick={() => setEditingUser(user)}
+                      >
+                        <Edit className="h-4 w-4 mr-2" />
+                        Edit User
+                      </Button>
                       <Button
                         size="sm"
                         variant="destructive"
-                        className="w-full"
+                        className="w-full justify-start"
                         onClick={async () => {
                           if (!confirm(`Are you sure you want to delete user ${user.name || user.email}?`)) return
                           try {
@@ -700,6 +711,15 @@ export default function AdminPage() {
       <UserForm
         isOpen={showUserForm}
         onClose={() => setShowUserForm(false)}
+        onSuccess={() => {
+          // Users list will automatically refresh via Convex reactivity
+        }}
+      />
+
+      <EditUserDialog
+        user={editingUser}
+        isOpen={!!editingUser}
+        onClose={() => setEditingUser(null)}
         onSuccess={() => {
           // Users list will automatically refresh via Convex reactivity
         }}
