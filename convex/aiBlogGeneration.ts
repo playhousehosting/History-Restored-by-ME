@@ -18,8 +18,12 @@ export const generateBlogPost = action({
       v.literal("enthusiast"),
       v.literal("technical")
     )),
+    format: v.optional(v.union(
+      v.literal("html"),
+      v.literal("markdown")
+    )),
   },
-  handler: async (ctx, { topic, keywords = "", tone = "professional" }) => {
+  handler: async (ctx, { topic, keywords = "", tone = "professional", format = "html" }) => {
     // Verify user is authenticated - get userId from query that has access to ctx
     const userId = await ctx.runQuery(api.aiBlogGeneration.getCurrentUserId);
     if (!userId) {
@@ -40,8 +44,8 @@ export const generateBlogPost = action({
       apiKey: apiKey,
     });
 
-    // Create the prompt for Claude
-    const prompt = `You are an expert content writer specializing in vintage tractors, agricultural machinery, and equipment restoration. Create a professional, magazine-quality blog post.
+    // Create the prompt for Claude based on format
+    const htmlPrompt = `You are an expert content writer specializing in vintage tractors, agricultural machinery, and equipment restoration. Create a professional, magazine-quality blog post.
 
 Write a comprehensive, SEO-optimized blog post about: "${topic}"
 
@@ -63,58 +67,73 @@ STRUCTURE REQUIREMENTS:
 4. Practical lists for specifications, tips, and procedures
 5. Strong conclusion that summarizes key points
 
-HTML FORMATTING RULES (STRICTLY FOLLOW):
-1. Use <p></p> tags for EVERY paragraph - no exceptions
-2. Use <h2></h2> for main section titles
-3. Use <h3></h3> for subsections
-4. Use <ul><li></li></ul> for bulleted lists
-5. Use <ol><li></li></ul> for numbered lists
-6. Use <strong></strong> for important terms and emphasis
-7. Use <em></em> for subtle emphasis or technical terms
-8. Use <blockquote></blockquote> for quotes or key insights
+CRITICAL HTML FORMATTING RULES - YOU MUST FOLLOW EXACTLY:
+1. EVERY paragraph MUST be wrapped in <p></p> tags
+2. EVERY main section title MUST use <h2></h2>
+3. EVERY subsection title MUST use <h3></h3>
+4. ALL bullet lists MUST use <ul><li></li></ul>
+5. ALL numbered lists MUST use <ol><li></li></ol>
+6. Use <strong></strong> for emphasis (NOT <b>)
+7. Use <em></em> for subtle emphasis (NOT <i>)
+8. NO PLAIN TEXT - Everything must be in HTML tags
+9. NO MARKDOWN - Only HTML is allowed
 
-SPACING RULES:
-- Leave blank line after each closing tag
-- Separate sections with double line breaks
-- Each paragraph should be standalone with proper tags
-- Lists must be properly formatted with ul/ol tags
+MANDATORY FORMAT EXAMPLE:
+<p>The 1950 Ford 8N tractor represents a pivotal moment in American agricultural history, embodying the perfect blend of innovation, reliability, and affordability that revolutionized small-farm operations across the nation.</p>
 
-EXAMPLE STRUCTURE:
-<p>Opening paragraph that hooks the reader with interesting facts...</p>
+<p>When Ford introduced this iconic machine, they didn't just create another tractor—they crafted a legend that would endure for generations.</p>
 
-<p>Second paragraph expanding on the hook...</p>
+<h2>Historical Development and Innovation</h2>
 
-<h2>Historical Development</h2>
+<p>The Ford 8N emerged in 1947 as a groundbreaking advancement over its predecessor, the 9N model. This evolution brought several key improvements that would define modern tractor design.</p>
 
-<p>First paragraph of this section...</p>
-
-<p>Second paragraph with more details...</p>
-
-<h3>Key Innovations</h3>
-
-<p>Explanation of innovations...</p>
+<h3>Key Innovations and Features</h3>
 
 <ul>
-<li>First innovation point</li>
-<li>Second innovation point</li>
-<li>Third innovation point</li>
+<li><strong>Four-Speed Transmission:</strong> Upgraded from the three-speed design</li>
+<li><strong>Position Control:</strong> Revolutionary hydraulic system</li>
+<li><strong>Improved PTO:</strong> Better power take-off capabilities</li>
 </ul>
 
 <h2>Technical Specifications</h2>
 
-<p>Overview of technical details...</p>
+<p>Understanding the technical details is crucial for any restoration project or maintenance routine.</p>
 
-<h3>Engine and Performance</h3>
-
-<p>Detailed engine information...</p>
+<h3>Engine Details</h3>
 
 <ul>
-<li><strong>Engine Type:</strong> Details here</li>
-<li><strong>Horsepower:</strong> Details here</li>
-<li><strong>Displacement:</strong> Details here</li>
+<li><strong>Engine Type:</strong> Four-cylinder L-head gasoline engine</li>
+<li><strong>Displacement:</strong> 120 cubic inches</li>
+<li><strong>Horsepower:</strong> 23.5 belt hp, 19.2 drawbar hp</li>
+<li><strong>Bore and Stroke:</strong> 3.19" x 3.75"</li>
 </ul>
 
-Continue with comprehensive sections covering restoration, maintenance, collector value, and practical tips. End with a strong conclusion.`;
+Continue this exact format throughout the ENTIRE article. Every sentence in proper HTML tags. No exceptions.`;
+
+    const markdownPrompt = `You are an expert content writer specializing in vintage tractors, agricultural machinery, and equipment restoration. Create a professional, magazine-quality blog post.
+
+Write a comprehensive, SEO-optimized blog post about: "${topic}"
+
+CONTENT REQUIREMENTS:
+- Length: 1500-2000 words (comprehensive and detailed)
+- Tone: ${tone}
+- Include specific technical details, history, and restoration insights
+- Create engaging narrative that captivates readers
+- Natural keyword integration: ${keywords || topic}
+- Include maintenance tips, historical context, and collector value insights
+- Use specific model numbers, years, and technical specifications
+
+FORMAT: Use clean Markdown formatting:
+- ## for main headings
+- ### for subheadings
+- **bold** for emphasis
+- * or - for bullet lists
+- 1. 2. 3. for numbered lists
+- Blank lines between sections
+
+Start writing the article now:`;
+
+    const prompt = format === "html" ? htmlPrompt : markdownPrompt;
 
     try {
       // Call Claude Haiku 4.5 API

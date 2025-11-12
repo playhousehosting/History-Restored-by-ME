@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { useAction } from "convex/react"
+import { useAction, useQuery } from "convex/react"
 import { api } from "@convex/_generated/api"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
@@ -10,17 +10,26 @@ import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Alert, AlertDescription } from "@/components/ui/alert"
-import { Sparkles, Loader2, CheckCircle, AlertCircle } from "lucide-react"
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog"
+import { Sparkles, Loader2, CheckCircle, AlertCircle, Eye } from "lucide-react"
 import { toast } from "sonner"
+import type { Id } from "@convex/_generated/dataModel"
 
 export function AIBlogGenerator({ onSuccess }: { onSuccess?: () => void }) {
   const [topic, setTopic] = useState("")
   const [keywords, setKeywords] = useState("")
   const [tone, setTone] = useState<"professional" | "casual" | "enthusiast" | "technical">("professional")
+  const [format, setFormat] = useState<"html" | "markdown">("html")
   const [isGenerating, setIsGenerating] = useState(false)
   const [result, setResult] = useState<any>(null)
+  const [previewOpen, setPreviewOpen] = useState(false)
+  const [previewPostId, setPreviewPostId] = useState<Id<"blogPosts"> | null>(null)
 
   const generateBlogPost = useAction(api.aiBlogGeneration.generateBlogPost)
+  const previewPost = useQuery(
+    api.blogPosts.getById,
+    previewPostId ? { id: previewPostId } : "skip"
+  )
 
   const handleGenerate = async () => {
     if (!topic.trim()) {
@@ -36,15 +45,18 @@ export function AIBlogGenerator({ onSuccess }: { onSuccess?: () => void }) {
         topic: topic.trim(),
         keywords: keywords.trim() || undefined,
         tone,
+        format,
       })
 
       setResult(response)
+      setPreviewPostId(response.blogPostId)
       toast.success("Blog post generated successfully!")
       
       // Clear form
       setTopic("")
       setKeywords("")
       setTone("professional")
+      setFormat("html")
       
       // Call onSuccess callback
       if (onSuccess) {
@@ -146,6 +158,22 @@ export function AIBlogGenerator({ onSuccess }: { onSuccess?: () => void }) {
               </SelectContent>
             </Select>
           </div>
+
+          <div>
+            <Label htmlFor="format">Output Format</Label>
+            <Select value={format} onValueChange={(value: any) => setFormat(value)} disabled={isGenerating}>
+              <SelectTrigger className="mt-1.5">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="html">HTML - Rich formatted with tags (Recommended)</SelectItem>
+                <SelectItem value="markdown">Markdown - Simple formatting</SelectItem>
+              </SelectContent>
+            </Select>
+            <p className="text-sm text-gray-500 mt-1">
+              HTML provides better formatting in the rich text editor
+            </p>
+          </div>
         </div>
 
         <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 md:p-4">
@@ -161,18 +189,33 @@ export function AIBlogGenerator({ onSuccess }: { onSuccess?: () => void }) {
         </div>
 
         {result && (
-          <Alert className="bg-green-50 border-green-200">
-            <CheckCircle className="h-4 w-4 text-green-600" />
-            <AlertDescription className="text-green-800">
-              <strong className="text-sm md:text-base">Blog post generated successfully!</strong>
-              <div className="mt-2 space-y-1 text-xs md:text-sm">
-                <p className="break-words">• Title: {result.preview?.title}</p>
-                <p>• Word Count: {result.preview?.wordCount || 0}</p>
-                <p className="break-words">• Tags: {result.preview?.tags}</p>
-                <p className="mt-2 font-semibold">Check the "Drafts" tab to review and publish!</p>
-              </div>
-            </AlertDescription>
-          </Alert>
+          <>
+            <Alert className="bg-green-50 border-green-200">
+              <CheckCircle className="h-4 w-4 text-green-600" />
+              <AlertDescription className="text-green-800">
+                <strong className="text-sm md:text-base">Blog post generated successfully!</strong>
+                <div className="mt-2 space-y-1 text-xs md:text-sm">
+                  <p className="break-words">• Title: {result.preview?.title}</p>
+                  <p>• Word Count: {result.preview?.wordCount || 0}</p>
+                  <p className="break-words">• Tags: {result.preview?.tags}</p>
+                  <div className="flex gap-2 mt-3">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setPreviewOpen(true)}
+                      className="text-xs"
+                    >
+                      <Eye className="h-3 w-3 mr-1" />
+                      Preview Content
+                    </Button>
+                    <span className="text-xs text-gray-600 self-center">
+                      Or check the "Drafts" tab to edit and publish!
+                    </span>
+                  </div>
+                </div>
+              </AlertDescription>
+            </Alert>
+          </>
         )}
 
         <Button
@@ -198,6 +241,75 @@ export function AIBlogGenerator({ onSuccess }: { onSuccess?: () => void }) {
           Powered by Claude Haiku 4.5 • Generation takes 10-30 seconds
         </p>
       </CardContent>
+
+      {/* Preview Dialog */}
+      <Dialog open={previewOpen} onOpenChange={setPreviewOpen}>
+        <DialogContent className="max-w-5xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>AI Generated Blog Post Preview</DialogTitle>
+            <DialogDescription>
+              Review the generated content. You can edit it further in the Drafts tab.
+            </DialogDescription>
+          </DialogHeader>
+          
+          {previewPost ? (
+            <article className="border-t pt-6">
+              {previewPost.featuredImage && (
+                <img 
+                  src={previewPost.featuredImage} 
+                  alt={previewPost.title}
+                  className="w-full h-64 object-cover rounded-lg mb-6"
+                />
+              )}
+              <h1 className="text-4xl font-bold mb-4">{previewPost.title}</h1>
+              {previewPost.excerpt && (
+                <p className="text-xl text-gray-600 mb-6 italic">{previewPost.excerpt}</p>
+              )}
+              {previewPost.tags && (
+                <div className="flex flex-wrap gap-2 mb-6">
+                  {previewPost.tags.split(",").map((tag, i) => (
+                    <span key={i} className="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm">
+                      {tag.trim()}
+                    </span>
+                  ))}
+                </div>
+              )}
+              <div
+                className="prose prose-sm sm:prose lg:prose-lg max-w-none"
+                dangerouslySetInnerHTML={{ __html: previewPost.content }}
+              />
+              <div className="mt-8 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                <h3 className="font-semibold text-blue-900 mb-2">SEO Metadata</h3>
+                <div className="space-y-1 text-sm text-blue-800">
+                  <p><strong>Meta Title:</strong> {previewPost.metaTitle || previewPost.title}</p>
+                  <p><strong>Meta Description:</strong> {previewPost.metaDescription || previewPost.excerpt}</p>
+                  <p><strong>Slug:</strong> {previewPost.slug}</p>
+                </div>
+              </div>
+            </article>
+          ) : (
+            <div className="py-12 text-center">
+              <Loader2 className="h-8 w-8 animate-spin mx-auto text-gray-400 mb-2" />
+              <p className="text-gray-500">Loading preview...</p>
+            </div>
+          )}
+          
+          <div className="flex justify-end gap-2 pt-4 border-t">
+            <Button variant="outline" onClick={() => setPreviewOpen(false)}>
+              Close Preview
+            </Button>
+            <Button 
+              onClick={() => {
+                setPreviewOpen(false)
+                if (onSuccess) onSuccess()
+              }}
+              className="bg-red-700 hover:bg-red-800"
+            >
+              Go to Drafts Tab
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </Card>
   )
 }
