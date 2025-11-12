@@ -56,8 +56,9 @@ A premium, Fortune 500-level website showcasing vintage tractor restoration serv
 
 ### 📸 **Image Management**
 - Multiple image uploads per project
-- UploadThing integration for reliable hosting
-- Automatic image optimization
+- Convex built-in file storage (no external API keys required)
+- Automatic image optimization with Next.js Image
+- File tracking and metadata management
 - Responsive image loading
 
 ### 💬 **Contact System**
@@ -73,10 +74,10 @@ A premium, Fortune 500-level website showcasing vintage tractor restoration serv
 | **Framework** | Next.js 15 (App Router) |
 | **Language** | TypeScript |
 | **Styling** | Tailwind CSS v4 |
-| **Backend** | Convex (Realtime Database) |
+| **Backend** | Convex (Realtime Database + File Storage) |
 | **Authentication** | Convex Auth |
 | **AI Integration** | Anthropic Claude API |
-| **File Upload** | UploadThing |
+| **File Storage** | Convex Built-in Storage |
 | **UI Components** | shadcn/ui |
 | **Icons** | Lucide React |
 | **Deployment** | Vercel |
@@ -85,7 +86,6 @@ A premium, Fortune 500-level website showcasing vintage tractor restoration serv
 
 - Node.js 18+ installed
 - A Convex account (https://convex.dev)
-- An UploadThing account (https://uploadthing.com)
 - Anthropic API key for AI blog generation (https://console.anthropic.com)
 
 ## 🚀 Getting Started
@@ -103,14 +103,11 @@ npm install
 Create a `.env.local` file in the root directory:
 
 ```env
-# Convex Backend
+# Convex Backend (Required)
 CONVEX_DEPLOYMENT=your-deployment-url  # From Convex Dashboard
 NEXT_PUBLIC_CONVEX_URL=https://your-project.convex.cloud
 
-# UploadThing (Image Uploads)
-UPLOADTHING_TOKEN=your_uploadthing_token
-
-# Anthropic API (AI Blog Generation)
+# Anthropic API (Optional - for AI Blog Generation)
 ANTHROPIC_API_KEY=your_anthropic_api_key
 ```
 
@@ -162,6 +159,7 @@ Open [http://localhost:3000](http://localhost:3000) to see your site!
 ├── convex/                     # Convex backend
 │   ├── schema.ts              # Database schema
 │   ├── auth.ts                # Authentication logic
+│   ├── files.ts               # File storage operations
 │   ├── projects.ts            # Project CRUD operations
 │   ├── blogPosts.ts           # Blog post operations
 │   ├── aiBlogGeneration.ts    # AI blog generation
@@ -170,10 +168,10 @@ Open [http://localhost:3000](http://localhost:3000) to see your site!
 ├── src/
 │   ├── app/
 │   │   ├── admin/             # Admin dashboard (protected)
-│   │   ├── api/uploadthing/   # File upload endpoint
 │   │   ├── auth/              # Authentication pages
 │   │   │   ├── signin/        # Sign-in page
-│   │   │   └── register/      # Registration page
+│   │   │   ├── register/      # Registration page
+│   │   │   └── magic-link/    # Magic link sign-in (optional)
 │   │   ├── blog/              # Blog pages
 │   │   │   ├── page.tsx       # Blog listing
 │   │   │   └── [slug]/        # Individual blog post
@@ -188,6 +186,9 @@ Open [http://localhost:3000](http://localhost:3000) to see your site!
 │       ├── admin/             # Admin-specific components
 │       │   ├── AIBlogGenerator.tsx
 │       │   ├── BlogForm.tsx
+│       │   ├── ConvexImageUploader.tsx  # Multi-file upload
+│       │   ├── SingleImageUploader.tsx  # Single file upload
+│       │   ├── ImageUploader.tsx        # Gallery uploader
 │       │   ├── ProjectForm.tsx
 │       │   └── SiteSettings.tsx
 │       ├── ui/                # shadcn/ui components
@@ -205,6 +206,7 @@ Open [http://localhost:3000](http://localhost:3000) to see your site!
 - **users**: User accounts with authentication and roles
 - **projects**: Restoration project showcases
 - **blogPosts**: Blog articles with AI generation support
+- **files**: Uploaded file metadata and tracking
 - **contactSubmissions**: Contact form submissions
 - **siteSettings**: Global site configuration
 - **scheduledPosts**: Scheduled blog post publications
@@ -232,8 +234,7 @@ Add these in Vercel's Project Settings → Environment Variables:
 ```env
 CONVEX_DEPLOYMENT=prod:your-deployment
 NEXT_PUBLIC_CONVEX_URL=https://your-project.convex.cloud
-UPLOADTHING_TOKEN=your_token
-ANTHROPIC_API_KEY=your_key
+ANTHROPIC_API_KEY=your_key  # Optional - for AI blog generation
 ```
 
 4. **Deploy Convex to Production**
@@ -302,8 +303,63 @@ The admin panel includes 7 tabs for complete site management:
 |----------|----------|-------------|--------------|
 | `CONVEX_DEPLOYMENT` | Yes | Convex deployment URL | Convex Dashboard |
 | `NEXT_PUBLIC_CONVEX_URL` | Yes | Public Convex endpoint | Convex Dashboard → Settings |
-| `UPLOADTHING_TOKEN` | Yes | Image upload API token | uploadthing.com/dashboard |
 | `ANTHROPIC_API_KEY` | Optional | For AI blog generation | console.anthropic.com |
+
+## 📸 File Storage System
+
+This project uses **Convex built-in file storage** - no external API keys or services required!
+
+### Upload Components
+
+Three specialized upload components are available:
+
+1. **ConvexImageUploader** - Multi-file upload with progress tracking
+   - Used for project galleries
+   - Drag & drop support
+   - Grid preview with remove buttons
+   - Progress bar for each upload
+
+2. **SingleImageUploader** - Simple single file upload
+   - Used for blog featured images
+   - Preview before upload
+   - Validation (file size, type)
+   - Loading states
+
+3. **ImageUploader** - Gallery-style multi-upload
+   - Used in ProjectForm
+   - Drag & drop reordering
+   - Multiple images in one upload
+
+### File Storage Benefits
+
+✅ **No API Keys** - Uses Convex built-in storage  
+✅ **No Limits** - No external service quotas  
+✅ **Better Tracking** - Files tracked in database  
+✅ **Secure** - User-based permissions  
+✅ **Fast** - Direct CDN delivery  
+
+### Usage Example
+
+```typescript
+// Upload a file
+const uploadUrl = await convex.mutation(api.files.generateUploadUrl);
+const result = await fetch(uploadUrl, {
+  method: "POST",
+  body: file,
+});
+const { storageId } = await result.json();
+
+// Save metadata
+await convex.mutation(api.files.saveFileMetadata, {
+  storageId,
+  name: file.name,
+  type: file.type,
+  size: file.size,
+  usedIn: { type: "project", id: projectId }
+});
+```
+
+For complete documentation, see [CONVEX_FILE_STORAGE.md](CONVEX_FILE_STORAGE.md)
 
 ## 🐛 Troubleshooting
 
@@ -322,9 +378,10 @@ echo $NEXT_PUBLIC_CONVEX_URL
 - Check Convex Auth configuration in `convex/auth.config.ts`
 
 ### Image Upload Failing
-- Confirm `UPLOADTHING_TOKEN` is valid
-- Check UploadThing dashboard for quota limits
-- Verify file size is under the limit (default 4MB)
+- Verify Convex is connected and deployed
+- Check file size is under 10MB (Convex limit)
+- Ensure user is authenticated
+- Check browser console for specific errors
 
 ### AI Blog Generation Errors
 - Ensure `ANTHROPIC_API_KEY` is set correctly
@@ -357,7 +414,7 @@ MIT License - feel free to use this project for your own tractor restoration bus
 - **Live Site**: [https://www.historyrestoredbyme.com](https://www.historyrestoredbyme.com)
 - **Convex**: [convex.dev](https://convex.dev)
 - **Next.js**: [nextjs.org](https://nextjs.org)
-- **UploadThing**: [uploadthing.com](https://uploadthing.com)
+- **Anthropic**: [anthropic.com](https://anthropic.com)
 
 ---
 

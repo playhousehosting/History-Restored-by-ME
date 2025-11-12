@@ -86,7 +86,10 @@ export default function ProjectPage() {
                               src={image.url}
                               alt={image.alt || project.title}
                               fill
+                              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 1200px"
                               className="object-contain rounded-lg"
+                              unoptimized={image.url.includes('convex.cloud')}
+                              priority={false}
                             />
                           </div>
                         </CardContent>
