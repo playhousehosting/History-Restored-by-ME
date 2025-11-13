@@ -49,6 +49,9 @@ export default function Footer() {
         
         <div className="border-t border-gray-800 mt-6 md:mt-8 pt-6 md:pt-8 text-center text-gray-400">
           <p className="text-sm md:text-base">&copy; {new Date().getFullYear()} History Restored by ME. All rights reserved.</p>
+          <p className="text-xs md:text-sm mt-2">
+            Made with ❤️ by <a href="mailto:Kameron@dynamicendpoints.com" className="text-blue-400 hover:text-blue-300 transition">Kameron@dynamicendpoints.com</a>
+          </p>
         </div>
       </div>
     </footer>
